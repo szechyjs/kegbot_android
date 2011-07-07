@@ -1,0 +1,36 @@
+<view
+    class="com.goliathonline.kegbot.ui.widget.ObservableScrollView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:kegbot="http://schemas.android.com/apk/res/com.goliathonline.kegbot"
+    android:id="@+id/blocks_scroll"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fadingEdge="vertical">
+    <view
+        class="com.goliathonline.kegbot.ui.widget.BlocksLayout"
+        android:id="@+id/blocks"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layerType="software"
+        kegbot:columns="3">
+        <view
+            class="com.goliathonline.kegbot.ui.widget.TimeRulerView"
+            android:id="@id/blocks_ruler"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            kegbot:headerWidth="@dimen/schedule_label_header_width"
+            kegbot:hourHeight="@dimen/schedule_hour_height"
+            kegbot:horizontalDivider="true"
+            kegbot:labelTextSize="@dimen/text_size_small"
+            kegbot:labelPaddingLeft="@dimen/schedule_label_padding"
+            kegbot:labelColor="#000000"
+            kegbot:dividerColor="#22000000"
+            kegbot:startHour="7"
+            kegbot:endHour="23" />
+        <View
+            android:id="@id/blocks_now"
+            android:background="@drawable/now_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </view>
+</view>
