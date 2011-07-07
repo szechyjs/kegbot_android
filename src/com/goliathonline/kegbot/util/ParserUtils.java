@@ -1,10 +1,9 @@
 package com.goliathonline.kegbot.util;
 
-import com.goliathonline.kegbot.io.XmlHandler;
+import com.goliathonline.kegbot.io.JsonHandler;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.ContentProvider;
 import android.net.Uri;
@@ -15,7 +14,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Various utility methods used by {@link XmlHandler} implementations.
+ * Various utility methods used by {@link JsonHandler} implementations.
  */
 public class ParserUtils {
     // TODO: consider refactor to HandlerUtils?
@@ -41,7 +40,6 @@ public class ParserUtils {
     private static final Pattern sCommaPattern = Pattern.compile("\\s*,\\s*");
 
     private static Time sTime = new Time();
-    private static XmlPullParserFactory sFactory;
 
     /**
      * Sanitize the given string to be {@link Uri} safe for building
@@ -73,15 +71,12 @@ public class ParserUtils {
     }
 
     /**
-     * Build and return a new {@link XmlPullParser} with the given
+     * Build and return a new {@link JSONObject} with the given
      * {@link InputStream} assigned to it.
      */
-    public static XmlPullParser newPullParser(InputStream input) throws XmlPullParserException {
-        if (sFactory == null) {
-            sFactory = XmlPullParserFactory.newInstance();
-        }
-        final XmlPullParser parser = sFactory.newPullParser();
-        parser.setInput(input, null);
+    public static JSONObject newPullParser(InputStream input) throws JSONException {
+
+        final JSONObject parser = new JSONObject(input.toString());
         return parser;
     }
 

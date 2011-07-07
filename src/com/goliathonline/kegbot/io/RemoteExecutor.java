@@ -1,6 +1,6 @@
 package com.goliathonline.kegbot.io;
 
-import com.goliathonline.kegbot.io.XmlHandler.HandlerException;
+import com.goliathonline.kegbot.io.JsonHandler.HandlerException;
 import com.goliathonline.kegbot.util.ParserUtils;
 
 import org.apache.http.HttpResponse;
@@ -8,8 +8,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.ContentResolver;
 
@@ -18,7 +18,7 @@ import java.io.InputStream;
 
 /**
  * Executes an {@link HttpUriRequest} and passes the result as an
- * {@link XmlPullParser} to the given {@link XmlHandler}.
+ * {@link JSONObject} to the given {@link JsonHandler}.
  */
 public class RemoteExecutor {
     private final HttpClient mHttpClient;
@@ -31,18 +31,18 @@ public class RemoteExecutor {
 
     /**
      * Execute a {@link HttpGet} request, passing a valid response through
-     * {@link XmlHandler#parseAndApply(XmlPullParser, ContentResolver)}.
+     * {@link JsonHandler#parseAndApply(JSONObject, ContentResolver)}.
      */
-    public void executeGet(String url, XmlHandler handler) throws HandlerException {
+    public void executeGet(String url, JsonHandler handler) throws HandlerException {
         final HttpUriRequest request = new HttpGet(url);
         execute(request, handler);
     }
 
     /**
      * Execute this {@link HttpUriRequest}, passing a valid response through
-     * {@link XmlHandler#parseAndApply(XmlPullParser, ContentResolver)}.
+     * {@link JsonHandler#parseAndApply(JSONObject, ContentResolver)}.
      */
-    public void execute(HttpUriRequest request, XmlHandler handler) throws HandlerException {
+    public void execute(HttpUriRequest request, JsonHandler handler) throws HandlerException {
         try {
             final HttpResponse resp = mHttpClient.execute(request);
             final int status = resp.getStatusLine().getStatusCode();
@@ -53,9 +53,9 @@ public class RemoteExecutor {
 
             final InputStream input = resp.getEntity().getContent();
             try {
-                final XmlPullParser parser = ParserUtils.newPullParser(input);
+                final JSONObject parser = ParserUtils.newPullParser(input);
                 handler.parseAndApply(parser, mResolver);
-            } catch (XmlPullParserException e) {
+            } catch (JSONException e) {
                 throw new HandlerException("Malformed response for " + request.getRequestLine(), e);
             } finally {
                 if (input != null) input.close();
