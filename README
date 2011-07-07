@@ -1,0 +1,9 @@
+This app is still in the initial development stages.  If you would like to contribute to this project please let me know.
+
+This is a fork from the Google I/O 2011 app.  My goal is to have this app compatible with all android platforms, phones and tablets. The iosched app lays a great framework to build off of, as it has been well designed for all platforms, and operates very eficiently.
+
+My first task is to refactor the app and prep it as a platform for my kegbot app.
+
+The kegbot app will make use of the kegbot web API.  I would like to have features in the app that make use of all the API calls, such as drinks, kegs, sessions, temp readings...
+
+If you have any other suggestions as to what features the app should have please post as well.
