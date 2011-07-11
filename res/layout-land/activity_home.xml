@@ -20,7 +20,7 @@
     android:layout_height="fill_parent">
     <include layout="@layout/actionbar" />
 
-    <fragment android:name="com.goliathonline.kegbot.ui.DashboardFragment"
+    <fragment android:name="com.goliathonline.android.kegbot.ui.DashboardFragment"
         android:id="@+id/fragment_dashboard"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -32,10 +32,10 @@
         Caused by: java.lang.IllegalStateException: Fragment ....WhatsOnFragment did not
                 create a view.
     -->
-    <!-- fragment android:name="com.goliathonline.kegbot.ui.WhatsOnFragment"
+    <fragment android:name="com.goliathonline.android.kegbot.ui.WhatsOnFragment"
         android:id="@+id/fragment_now_playing"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:visibility="gone" / -->
+        android:visibility="gone" />
 
 </LinearLayout>

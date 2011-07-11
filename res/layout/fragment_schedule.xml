@@ -42,7 +42,7 @@
             android:focusable="true" />
     </FrameLayout>
 
-    <view class="com.goliathonline.kegbot.ui.widget.Workspace"
+    <view class="com.goliathonline.android.kegbot.ui.widget.Workspace"
         android:id="@+id/workspace"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />

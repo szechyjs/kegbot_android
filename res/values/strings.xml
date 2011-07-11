@@ -36,7 +36,7 @@
     <string name="title_vendors">Sandbox</string>
     <string name="title_vendor_detail">Company Information</string>
     <string name="title_map">Map</string>
-    <string name="title_tagstream">Realtime Stream</string>
+    <string name="title_tagstream">Twitter Feed</string>
     <string name="title_bulletin">Bulletin</string>
 
     <string name="title_session_tracks">Session tracks</string>
@@ -47,8 +47,8 @@
     <string name="title_search">Search</string>
     <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
 
-    <string name="btn_drinks">Drinks</string>
-    <string name="btn_kegs">Kegs</string>
+    <string name="btn_drink">Drinks</string>
+    <string name="btn_keg">Kegs</string>
     <string name="btn_sessions">Sessions</string>
     <string name="btn_starred">Starred</string>
     <string name="btn_users">Users</string>
@@ -111,13 +111,13 @@
         <item quantity="other"><xliff:g id="number_of_days">%1$s</xliff:g> days, <xliff:g id="remaining_time">%2$s</xliff:g>\nuntil Google I/O</item>
     </plurals>
 
-    <string name="whats_on_stream_title">Realtime\nStream</string>
+    <string name="whats_on_stream_title">Twitter\nFeed</string>
     <string name="whats_on_now_playing_title">Now Playing</string>
     <string name="whats_on_thank_you_title">See you next year!</string>
 
-    <string name="permission_write">Modify Kegbot schedule data</string>
+    <string name="permission_write">Modify Kegbot data</string>
 
-    <string name="toast_now_not_visible">Press this button during Kegbot to show the current time.</string>
+    <string name="toast_now_not_visible">Press this button during Google I/O to show the current time.</string>
 
     <!-- Notes integration -->
     <string name="notes_catch_powered_by">Notes are powered by <a href="http://www.catch.com/">Catch.com</a>.</string>
