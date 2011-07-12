@@ -20,10 +20,9 @@ import com.goliathonline.android.kegbot.io.LocalBlocksHandler;
 import com.goliathonline.android.kegbot.io.LocalExecutor;
 import com.goliathonline.android.kegbot.io.LocalRoomsHandler;
 import com.goliathonline.android.kegbot.io.LocalSearchSuggestHandler;
-import com.goliathonline.android.kegbot.io.LocalSessionsHandler;
 import com.goliathonline.android.kegbot.io.LocalTracksHandler;
+import com.goliathonline.android.kegbot.io.RemoteDrinksHandler;
 import com.goliathonline.android.kegbot.io.RemoteExecutor;
-import com.goliathonline.android.kegbot.io.RemoteSessionsHandler;
 import com.goliathonline.android.kegbot.io.RemoteSpeakersHandler;
 import com.goliathonline.android.kegbot.io.RemoteVendorsHandler;
 import com.goliathonline.android.kegbot.io.RemoteWorksheetsHandler;
@@ -84,8 +83,7 @@ public class SyncService extends IntentService {
 
     /** Root worksheet feed for online data source */
     // TODO: insert your sessions/speakers/vendors spreadsheet doc URL here.
-    private static final String WORKSHEETS_URL = "http://spreadsheets.google.com"
-            + "/feeds/worksheets/t0bDxnEqbFO4XuYpkA070Nw/public/basic";
+    public static final String WORKSHEETS_URL = "http://kegbot.goliathonline.com/api";
 
     private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static final String ENCODING_GZIP = "gzip";
@@ -132,18 +130,12 @@ public class SyncService extends IntentService {
             Log.d(TAG, "found localVersion=" + localVersion + " and VERSION_CURRENT="
                     + VERSION_CURRENT);
             if (localParse) {
-                // Load static local data
-                mLocalExecutor.execute(R.xml.blocks, new LocalBlocksHandler());
-                mLocalExecutor.execute(R.xml.rooms, new LocalRoomsHandler());
-                mLocalExecutor.execute(R.xml.tracks, new LocalTracksHandler());
-                mLocalExecutor.execute(R.xml.search_suggest, new LocalSearchSuggestHandler());
-                mLocalExecutor.execute(R.xml.sessions, new LocalSessionsHandler());
 
                 // Parse values from local cache first, since spreadsheet copy
                 // or network might be down.
-                mLocalExecutor.execute(context, "cache-sessions.xml", new RemoteSessionsHandler());
-                mLocalExecutor.execute(context, "cache-speakers.xml", new RemoteSpeakersHandler());
-                mLocalExecutor.execute(context, "cache-vendors.xml", new RemoteVendorsHandler());
+                mLocalExecutor.execute(context, "cache-drinks.json", new RemoteDrinksHandler());
+                //mLocalExecutor.execute(context, "cache-speakers.xml", new RemoteSpeakersHandler());
+                //mLocalExecutor.execute(context, "cache-vendors.xml", new RemoteVendorsHandler());
 
                 // Save local parsed version
                 prefs.edit().putInt(Prefs.LOCAL_VERSION, VERSION_CURRENT).commit();

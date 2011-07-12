@@ -62,7 +62,7 @@ public class LocalDrinksHandler extends JsonHandler {
         long endTime = -1;
         String title = null;
         String drinkId = null;
-        String trackId = null;
+        String kegId = null;
         String userId = null;
 
         drinkId = parser.getString(Tags.ID);

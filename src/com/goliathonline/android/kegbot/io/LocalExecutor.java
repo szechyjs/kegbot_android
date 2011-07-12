@@ -16,16 +16,16 @@
 
 package com.goliathonline.android.kegbot.io;
 
-import com.goliathonline.android.kegbot.io.XmlHandler.HandlerException;
+import com.goliathonline.android.kegbot.io.JsonHandler.HandlerException;
 import com.goliathonline.android.kegbot.util.ParserUtils;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,27 +43,18 @@ public class LocalExecutor {
         mResolver = resolver;
     }
 
-    public void execute(Context context, String assetName, XmlHandler handler)
+    public void execute(Context context, String assetName, JsonHandler handler)
             throws HandlerException {
         try {
             final InputStream input = context.getAssets().open(assetName);
-            final XmlPullParser parser = ParserUtils.newPullParser(input);
+            final JSONObject parser = new JSONObject(ParserUtils.convertStreamToString(input));
             handler.parseAndApply(parser, mResolver);
         } catch (HandlerException e) {
             throw e;
-        } catch (XmlPullParserException e) {
+        } catch (JSONException e) {
             throw new HandlerException("Problem parsing local asset: " + assetName, e);
         } catch (IOException e) {
             throw new HandlerException("Problem parsing local asset: " + assetName, e);
-        }
-    }
-
-    public void execute(int resId, XmlHandler handler) throws HandlerException {
-        final XmlResourceParser parser = mRes.getXml(resId);
-        try {
-            handler.parseAndApply(parser, mResolver);
-        } finally {
-            parser.close();
         }
     }
 }

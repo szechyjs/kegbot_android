@@ -33,7 +33,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.text.format.Time;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -204,6 +207,30 @@ public class ParserUtils {
         return trackId;
         //}
     }
+    
+	/**
+	 * Converts an {@link InputStream} to a {@link String}.
+	 */
+	public static String convertStreamToString(InputStream is) {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		StringBuilder sb = new StringBuilder();
+		String line = null;
+
+		try {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return sb.toString();
+	}
 
     /** XML tag constants used by the Atom standard. */
     public interface AtomTags {

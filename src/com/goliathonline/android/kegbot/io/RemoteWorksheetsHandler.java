@@ -16,18 +16,15 @@
 
 package com.goliathonline.android.kegbot.io;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Sessions;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Speakers;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Vendors;
+import com.goliathonline.android.kegbot.provider.KegbotContract;
+import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
+import com.goliathonline.android.kegbot.service.SyncService;
 import com.goliathonline.android.kegbot.util.Lists;
-import com.goliathonline.android.kegbot.util.Maps;
 import com.goliathonline.android.kegbot.util.ParserUtils;
-import com.goliathonline.android.kegbot.util.WorksheetEntry;
 
 import org.apache.http.client.methods.HttpGet;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -36,82 +33,62 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import static com.goliathonline.android.kegbot.util.ParserUtils.AtomTags.ENTRY;
-import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
-import static org.xmlpull.v1.XmlPullParser.START_TAG;
-
-public class RemoteWorksheetsHandler extends XmlHandler {
+public class RemoteWorksheetsHandler extends JsonHandler {
     private static final String TAG = "WorksheetsHandler";
 
     private RemoteExecutor mExecutor;
 
     public RemoteWorksheetsHandler(RemoteExecutor executor) {
-        super(ScheduleContract.CONTENT_AUTHORITY);
+        super(KegbotContract.CONTENT_AUTHORITY);
         mExecutor = executor;
     }
 
     @Override
-    public ArrayList<ContentProviderOperation> parse(XmlPullParser parser, ContentResolver resolver)
-            throws XmlPullParserException, IOException {
-        final HashMap<String, WorksheetEntry> sheets = Maps.newHashMap();
+    public ArrayList<ContentProviderOperation> parse(JSONObject parser, ContentResolver resolver)
+            throws JSONException, IOException {
 
-        // walk response, collecting all known spreadsheets
-        int type;
-        while ((type = parser.next()) != END_DOCUMENT) {
-            if (type == START_TAG && ENTRY.equals(parser.getName())) {
-                final WorksheetEntry entry = WorksheetEntry.fromParser(parser);
-                Log.d(TAG, "found worksheet " + entry.toString());
-                sheets.put(entry.getTitle(), entry);
-            }
+        if (parser.has("result") || parser.has("error"))
+        {
+        	// consider updating each spreadsheet based on update timestamp
+        	considerUpdate(Tables.DRINKS, Drinks.CONTENT_URI, resolver);
+        	//considerUpdate(sheets, Worksheets.SPEAKERS, Speakers.CONTENT_URI, resolver);
+        	//considerUpdate(sheets, Worksheets.VENDORS, Vendors.CONTENT_URI, resolver);
         }
-
-        // consider updating each spreadsheet based on update timestamp
-        considerUpdate(sheets, Worksheets.SESSIONS, Sessions.CONTENT_URI, resolver);
-        considerUpdate(sheets, Worksheets.SPEAKERS, Speakers.CONTENT_URI, resolver);
-        considerUpdate(sheets, Worksheets.VENDORS, Vendors.CONTENT_URI, resolver);
-
         return Lists.newArrayList();
     }
 
-    private void considerUpdate(HashMap<String, WorksheetEntry> sheets, String sheetName,
+    private void considerUpdate(String tableName,
             Uri targetDir, ContentResolver resolver) throws HandlerException {
-        final WorksheetEntry entry = sheets.get(sheetName);
-        if (entry == null) {
+        if (tableName == null) {
             // Silently ignore missing spreadsheets to allow sync to continue.
-            Log.w(TAG, "Missing '" + sheetName + "' worksheet data");
+            Log.w(TAG, "Missing '" + tableName + "' table data");
             return;
-//            throw new HandlerException("Missing '" + sheetName + "' worksheet data");
+//            throw new HandlerException("Missing '" + sheetName + "' table data");
         }
 
         final long localUpdated = ParserUtils.queryDirUpdated(targetDir, resolver);
-        final long serverUpdated = entry.getUpdated();
-        Log.d(TAG, "considerUpdate() for " + entry.getTitle() + " found localUpdated="
+        final long serverUpdated = 0; //entry.getUpdated();
+        Log.d(TAG, "considerUpdate() for " + tableName + " found localUpdated="
                 + localUpdated + ", server=" + serverUpdated);
         if (localUpdated >= serverUpdated) return;
 
-        final HttpGet request = new HttpGet(entry.getListFeed());
-        final XmlHandler handler = createRemoteHandler(entry);
+        final HttpGet request = new HttpGet(SyncService.WORKSHEETS_URL + "/drinks");
+        final JsonHandler handler = createRemoteHandler(tableName);
         mExecutor.execute(request, handler);
     }
 
-    private XmlHandler createRemoteHandler(WorksheetEntry entry) {
-        final String title = entry.getTitle();
-        if (Worksheets.SESSIONS.equals(title)) {
-            return new RemoteSessionsHandler();
-        } else if (Worksheets.SPEAKERS.equals(title)) {
-            return new RemoteSpeakersHandler();
-        } else if (Worksheets.VENDORS.equals(title)) {
-            return new RemoteVendorsHandler();
+    private JsonHandler createRemoteHandler(String tableName) {
+        if (Tables.DRINKS.equals(tableName)) {
+            return new RemoteDrinksHandler();
         } else {
             throw new IllegalArgumentException("Unknown worksheet type");
         }
     }
 
-    interface Worksheets {
-        String SESSIONS = "sessions";
-        String SPEAKERS = "speakers";
-        String VENDORS = "sandbox";
+    interface Tables {
+        String DRINKS = "drinks";
+        String USERS = "users";
+        String KEGS = "kegs";
     }
 }

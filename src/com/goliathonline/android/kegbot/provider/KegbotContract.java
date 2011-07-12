@@ -1,16 +1,8 @@
 package com.goliathonline.android.kegbot.provider;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Sessions;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Speakers;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.SpeakersColumns;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.SyncColumns;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Tracks;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.TracksColumns;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Vendors;
 import com.goliathonline.android.kegbot.util.ParserUtils;
 
 import android.app.SearchManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.provider.BaseColumns;
 

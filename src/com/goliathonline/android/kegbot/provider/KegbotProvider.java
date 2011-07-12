@@ -43,7 +43,6 @@ import android.util.Log;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Provider that stores {@link ScheduleContract} data. Data is usually inserted
