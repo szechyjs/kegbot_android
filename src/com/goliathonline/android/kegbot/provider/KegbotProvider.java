@@ -172,7 +172,7 @@ public class KegbotProvider extends ContentProvider {
             case DRINKS: {
                 db.insertOrThrow(Tables.DRINKS, null, values);
                 getContext().getContentResolver().notifyChange(uri, null);
-                return Drinks.buildDrinkUri(values.getAsString(Drinks.SESSION_ID));
+                return Drinks.buildDrinkUri(values.getAsString(Drinks.DRINK_ID));
             }
             case DRINKS_ID_USERS: {
                 db.insertOrThrow(Tables.DRINKS_USERS, null, values);

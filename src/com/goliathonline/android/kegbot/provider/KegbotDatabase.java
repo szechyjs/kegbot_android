@@ -73,13 +73,13 @@ public class KegbotDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + Tables.DRINKS + " ("
                 + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + SyncColumns.UPDATED + " INTEGER NOT NULL,"
+                + SyncColumns.UPDATED + " INTEGER,"
                 + DrinksColumns.DRINK_ID + " INTEGER NOT NULL,"
                 + DrinksColumns.SESSION_ID + " INTEGER NOT NULL,"
                 + DrinksColumns.STATUS + " TEXT NOT NULL,"
-                + DrinksColumns.USER_ID + " TEXT NOT NULL,"
+                + DrinksColumns.USER_ID + " TEXT,"
                 + DrinksColumns.KEG_ID + " INTEGER NOT NULL,"
-                + DrinksColumns.VOLUME + " TEXT NOT NULL,"
+                + DrinksColumns.VOLUME + " DOUBLE NOT NULL,"
                 + DrinksColumns.DRINK_STARRED + " INTEGER NOT NULL DEFAULT 0,"
                 + "UNIQUE (" + DrinksColumns.DRINK_ID + ") ON CONFLICT REPLACE)");
 

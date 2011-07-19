@@ -23,6 +23,7 @@ import com.goliathonline.android.kegbot.util.Lists;
 import com.goliathonline.android.kegbot.util.ParserUtils;
 
 import org.apache.http.client.methods.HttpGet;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,17 +49,22 @@ public class RemoteWorksheetsHandler extends JsonHandler {
     public ArrayList<ContentProviderOperation> parse(JSONObject parser, ContentResolver resolver)
             throws JSONException, IOException {
 
-        if (parser.has("result") || parser.has("error"))
+        if (parser.has("result"))
         {
+        	JSONObject events = parser.getJSONObject("result");
+        	JSONArray resultArray = events.getJSONArray("events");
+        	JSONObject recent = resultArray.getJSONObject(0);
+        	JSONObject event = recent.getJSONObject("event");
+        	int id = event.getInt("id");
         	// consider updating each spreadsheet based on update timestamp
-        	considerUpdate(Tables.DRINKS, Drinks.CONTENT_URI, resolver);
+        	considerUpdate(Tables.DRINKS, id, Drinks.CONTENT_URI, resolver);
         	//considerUpdate(sheets, Worksheets.SPEAKERS, Speakers.CONTENT_URI, resolver);
         	//considerUpdate(sheets, Worksheets.VENDORS, Vendors.CONTENT_URI, resolver);
         }
         return Lists.newArrayList();
     }
 
-    private void considerUpdate(String tableName,
+    private void considerUpdate(String tableName, int version,
             Uri targetDir, ContentResolver resolver) throws HandlerException {
         if (tableName == null) {
             // Silently ignore missing spreadsheets to allow sync to continue.
@@ -68,7 +74,7 @@ public class RemoteWorksheetsHandler extends JsonHandler {
         }
 
         final long localUpdated = ParserUtils.queryDirUpdated(targetDir, resolver);
-        final long serverUpdated = 0; //entry.getUpdated();
+        final long serverUpdated = version;
         Log.d(TAG, "considerUpdate() for " + tableName + " found localUpdated="
                 + localUpdated + ", server=" + serverUpdated);
         if (localUpdated >= serverUpdated) return;

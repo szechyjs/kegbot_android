@@ -133,7 +133,7 @@ public class SyncService extends IntentService {
 
                 // Parse values from local cache first, since spreadsheet copy
                 // or network might be down.
-                mLocalExecutor.execute(context, "cache-drinks.json", new RemoteDrinksHandler());
+                //mLocalExecutor.execute(context, "cache-drinks.json", new RemoteDrinksHandler());
                 //mLocalExecutor.execute(context, "cache-speakers.xml", new RemoteSpeakersHandler());
                 //mLocalExecutor.execute(context, "cache-vendors.xml", new RemoteVendorsHandler());
 
@@ -145,7 +145,7 @@ public class SyncService extends IntentService {
             // Always hit remote spreadsheet for any updates
             final long startRemote = System.currentTimeMillis();
             mRemoteExecutor
-                    .executeGet(WORKSHEETS_URL, new RemoteWorksheetsHandler(mRemoteExecutor));
+                    .executeGet(WORKSHEETS_URL + "/events", new RemoteWorksheetsHandler(mRemoteExecutor));
             Log.d(TAG, "remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
 
         } catch (Exception e) {

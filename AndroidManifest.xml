@@ -159,7 +159,7 @@
         <service android:name="com.goliathonline.android.kegbot.service.SyncService" />
 
         <provider
-            android:name="com.goliathonline.android.kegbot.provider.ScheduleProvider"
+            android:name="com.goliathonline.android.kegbot.provider.KegbotProvider"
             android:authorities="com.goliathonline.android.kegbot"
             android:writePermission="com.goliathonline.android.kegbot.permission.WRITE_SCHEDULE" />
 
