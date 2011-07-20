@@ -52,7 +52,12 @@ public class DashboardFragment extends Fragment {
                 if (UIUtils.isHoneycombTablet(getActivity())) {
                     startActivity(new Intent(getActivity(), ScheduleMultiPaneActivity.class));
                 } else {
-                    startActivity(new Intent(getActivity(), ScheduleActivity.class));
+                	final Intent intent = new Intent(Intent.ACTION_VIEW,
+                			KegbotContract.Drinks.CONTENT_URI);
+                	intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_drinks));
+                	intent.putExtra(DrinksFragment.EXTRA_NEXT_TYPE,
+                			DrinksFragment.NEXT_TYPE_DRINKS);
+                	startActivity(intent);
                 }
                 
             }
@@ -70,7 +75,7 @@ public class DashboardFragment extends Fragment {
                             KegbotContract.Drinks.CONTENT_URI);
                     intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_session_tracks));
                     intent.putExtra(DrinksFragment.EXTRA_NEXT_TYPE,
-                            TracksFragment.NEXT_TYPE_SESSIONS);
+                            DrinksFragment.NEXT_TYPE_DRINKS);
                     startActivity(intent);
                 }
 

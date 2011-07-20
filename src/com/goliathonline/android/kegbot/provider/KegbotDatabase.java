@@ -1,6 +1,7 @@
 package com.goliathonline.android.kegbot.provider;
 
 import com.goliathonline.android.kegbot.provider.KegbotContract.DrinksColumns;
+import com.goliathonline.android.kegbot.provider.KegbotContract.KegsColumns;
 import com.goliathonline.android.kegbot.provider.KegbotContract.SyncColumns;
 
 import android.app.SearchManager;
@@ -73,7 +74,6 @@ public class KegbotDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + Tables.DRINKS + " ("
                 + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + SyncColumns.UPDATED + " INTEGER,"
                 + DrinksColumns.DRINK_ID + " INTEGER NOT NULL,"
                 + DrinksColumns.SESSION_ID + " INTEGER NOT NULL,"
                 + DrinksColumns.STATUS + " TEXT NOT NULL,"
@@ -81,7 +81,24 @@ public class KegbotDatabase extends SQLiteOpenHelper {
                 + DrinksColumns.KEG_ID + " INTEGER NOT NULL,"
                 + DrinksColumns.VOLUME + " DOUBLE NOT NULL,"
                 + DrinksColumns.DRINK_STARRED + " INTEGER NOT NULL DEFAULT 0,"
+                + SyncColumns.UPDATED + " INTEGER,"
                 + "UNIQUE (" + DrinksColumns.DRINK_ID + ") ON CONFLICT REPLACE)");
+        
+        db.execSQL("CREATE TABLE " + Tables.KEGS + " ("
+                + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + KegsColumns.STATUS + " TEXT NOT NULL,"
+                + KegsColumns.VOLUME_REMAIN + " DOUBLE NOT NULL,"
+                + KegsColumns.DESCRIPTION + " TEXT NOT NULL,"
+                + KegsColumns.TYPE_ID + " TEXT NOT NULL,"
+                + KegsColumns.SIZE_ID + " INTEGER NOT NULL,"
+                + KegsColumns.PERCENT_FULL + " DOUBLE NOT NULL,"
+                + KegsColumns.SIZE_NAME + " TEXT NOT NULL,"
+                + KegsColumns.VOLUME_SPILL + " DOUBLE NOT NULL,"
+                + KegsColumns.KEG_ID + " INTEGER NOT NULL,"
+                + KegsColumns.VOLUME_SIZE + " DOUBLE NOT NULL,"
+                + KegsColumns.KEG_STARRED + " INTEGER NOT NULL DEFAULT 0,"
+                + SyncColumns.UPDATED + " INTEGER,"
+                + "UNIQUE (" + KegsColumns.KEG_ID + ") ON CONFLICT REPLACE)");
 
         db.execSQL("CREATE TABLE " + Tables.SEARCH_SUGGEST + " ("
                 + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"

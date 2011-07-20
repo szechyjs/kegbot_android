@@ -1,5 +1,7 @@
 package com.goliathonline.android.kegbot.provider;
 
+import com.goliathonline.android.kegbot.provider.ScheduleContract.Speakers;
+import com.goliathonline.android.kegbot.provider.ScheduleContract.Tracks;
 import com.goliathonline.android.kegbot.util.ParserUtils;
 
 import android.app.SearchManager;
@@ -56,10 +58,17 @@ public class KegbotContract {
     }
     
     interface KegsColumns {
-        /** Unique string identifying this keg. */
+        String STATUS = "status";
+        String VOLUME_REMAIN = "volume_ml_remain";
+        String DESCRIPTION = "description";
+        String TYPE_ID = "type_id";
+        String SIZE_ID = "size_id";
+        String PERCENT_FULL = "percent_full";
+        String SIZE_NAME = "size_name";
+        String VOLUME_SPILL = "spilled_ml";
         String KEG_ID = "keg_id";
-        /** Name describing this keg. */
-        String KEG_NAME = "keg_name";
+        String VOLUME_SIZE = "size_volume_ml";
+        String KEG_STARRED = "keg_starred";
     }
 
     public static final String CONTENT_AUTHORITY = "com.goliathonline.android.kegbot";
@@ -95,6 +104,22 @@ public class KegbotContract {
         /** Build {@link Uri} for requested {@link #DRINK_ID}. */
         public static Uri buildDrinkUri(String drinkId) {
             return CONTENT_URI.buildUpon().appendPath(drinkId).build();
+        }
+        
+        /**
+         * Build {@link Uri} that references any {@link Users} associated
+         * with the requested {@link #DRINK_ID}.
+         */
+        public static Uri buildUsersDirUri(String drinkId) {
+            return CONTENT_URI.buildUpon().appendPath(drinkId).appendPath(PATH_USERS).build();
+        }
+        
+        /**
+         * Build {@link Uri} that references any {@link Keg} associated with
+         * the requested {@link #DRINK_ID}.
+         */
+        public static Uri buildKegsDirUri(String drinkId) {
+            return CONTENT_URI.buildUpon().appendPath(drinkId).appendPath(PATH_KEGS).build();
         }
 
         /** Read {@link #DRINK_ID} from {@link Drinks} {@link Uri}. */
@@ -132,7 +157,7 @@ public class KegbotContract {
         public static final String DRINKS_COUNT = "drinks_count";
 
         /** Default "ORDER BY" clause. */
-        public static final String DEFAULT_SORT = KegsColumns.KEG_NAME + " ASC";
+        public static final String DEFAULT_SORT = KegsColumns.KEG_ID + " ASC";
 
         /** "All tracks" ID. */
         public static final String ALL_KEG_ID = "all";

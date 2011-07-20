@@ -18,6 +18,7 @@ package com.goliathonline.android.kegbot.io;
 
 import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
+import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
 import com.goliathonline.android.kegbot.service.SyncService;
 import com.goliathonline.android.kegbot.util.Lists;
 import com.goliathonline.android.kegbot.util.ParserUtils;
@@ -58,7 +59,7 @@ public class RemoteWorksheetsHandler extends JsonHandler {
         	int id = event.getInt("id");
         	// consider updating each spreadsheet based on update timestamp
         	considerUpdate(Tables.DRINKS, id, Drinks.CONTENT_URI, resolver);
-        	//considerUpdate(sheets, Worksheets.SPEAKERS, Speakers.CONTENT_URI, resolver);
+        	considerUpdate(Tables.KEGS, id, Kegs.CONTENT_URI, resolver);
         	//considerUpdate(sheets, Worksheets.VENDORS, Vendors.CONTENT_URI, resolver);
         }
         return Lists.newArrayList();
@@ -79,7 +80,14 @@ public class RemoteWorksheetsHandler extends JsonHandler {
                 + localUpdated + ", server=" + serverUpdated);
         if (localUpdated >= serverUpdated) return;
 
-        final HttpGet request = new HttpGet(SyncService.WORKSHEETS_URL + "/drinks");
+        String url = SyncService.WORKSHEETS_URL;
+        
+        if (Tables.DRINKS.equals(tableName))
+        	url = url + "/drinks";
+        else if (Tables.KEGS.equals(tableName))
+        	url = url + "/kegs";
+        
+        final HttpGet request = new HttpGet(url);
         final JsonHandler handler = createRemoteHandler(tableName);
         mExecutor.execute(request, handler);
     }
@@ -87,7 +95,10 @@ public class RemoteWorksheetsHandler extends JsonHandler {
     private JsonHandler createRemoteHandler(String tableName) {
         if (Tables.DRINKS.equals(tableName)) {
             return new RemoteDrinksHandler();
-        } else {
+        }
+        else if (Tables.KEGS.equals(tableName))
+        	return new RemoteKegsHandler(mExecutor);
+        else {
             throw new IllegalArgumentException("Unknown worksheet type");
         }
     }

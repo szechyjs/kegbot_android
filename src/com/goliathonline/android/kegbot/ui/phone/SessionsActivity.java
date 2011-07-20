@@ -17,7 +17,6 @@
 package com.goliathonline.android.kegbot.ui.phone;
 
 import com.goliathonline.android.kegbot.ui.BaseSinglePaneActivity;
-import com.goliathonline.android.kegbot.ui.DrinksFragment;
 import com.goliathonline.android.kegbot.ui.SessionsFragment;
 
 import android.os.Bundle;
@@ -26,7 +25,7 @@ import android.support.v4.app.Fragment;
 public class SessionsActivity extends BaseSinglePaneActivity {
     @Override
     protected Fragment onCreatePane() {
-        return new DrinksFragment();
+        return new SessionsFragment();
     }
 
     @Override

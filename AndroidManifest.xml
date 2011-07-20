@@ -89,6 +89,25 @@
                 <data android:mimeType="vnd.android.cursor.dir/vnd.iosched.session" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".ui.phone.DrinksActivity"
+            android:label="@string/title_sessions">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.TAB" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.kegbot.drink" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".ui.phone.DrinkDetailActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.kegbot.drink" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".ui.phone.SessionDetailActivity">
             <intent-filter>

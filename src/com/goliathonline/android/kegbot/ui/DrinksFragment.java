@@ -45,6 +45,8 @@ import android.widget.TextView;
 public class DrinksFragment extends ListFragment implements
         NotifyingAsyncQueryHandler.AsyncQueryListener {
 
+	public static final String EXTRA_NEXT_TYPE = "com.goliathonline.android.kegbot.extra.NEXT_TYPE";
+	public static final String NEXT_TYPE_DRINKS = "drinks";
     public static final String EXTRA_SCHEDULE_TIME_STRING =
             "com.goliathonline.android.kegbot.extra.SCHEDULE_TIME_STRING";
 
@@ -76,7 +78,6 @@ public class DrinksFragment extends ListFragment implements
         mCheckedPosition = -1;
         setListAdapter(null);
 
-        mHandler.cancelOperation(SearchQuery._TOKEN);
         mHandler.cancelOperation(DrinksQuery._TOKEN);
         mHandler.cancelOperation(KegsQuery._TOKEN);
 
@@ -103,7 +104,7 @@ public class DrinksFragment extends ListFragment implements
 
         // If caller launched us with specific track hint, pass it along when
         // launching session details. Also start a query to load the track info.
-        mTrackUri = intent.getParcelableExtra(SessionDetailFragment.EXTRA_TRACK);
+        mTrackUri = intent.getParcelableExtra(DrinkDetailFragment.EXTRA_TRACK);
         if (mTrackUri != null) {
             mHandler.startQuery(KegsQuery._TOKEN, mTrackUri, KegsQuery.PROJECTION);
         }
@@ -132,7 +133,7 @@ public class DrinksFragment extends ListFragment implements
             return;
         }
 
-        if (token == DrinksQuery._TOKEN || token == SearchQuery._TOKEN) {
+        if (token == DrinksQuery._TOKEN)  {
             onSessionOrSearchQueryComplete(cursor);
         } else if (token == KegsQuery._TOKEN) {
             onTrackQueryComplete(cursor);
@@ -205,11 +206,11 @@ public class DrinksFragment extends ListFragment implements
         // Launch viewer for specific session, passing along any track knowledge
         // that should influence the title-bar.
         final Cursor cursor = (Cursor)mAdapter.getItem(position);
-        final String sessionId = cursor.getString(cursor.getColumnIndex(
-                KegbotContract.Drinks.SESSION_ID));
-        final Uri sessionUri = KegbotContract.Drinks.buildDrinkUri(sessionId);
+        final String drinkId = cursor.getString(cursor.getColumnIndex(
+                KegbotContract.Drinks.DRINK_ID));
+        final Uri sessionUri = KegbotContract.Drinks.buildDrinkUri(drinkId);
         final Intent intent = new Intent(Intent.ACTION_VIEW, sessionUri);
-        intent.putExtra(SessionDetailFragment.EXTRA_TRACK, mTrackUri);
+        intent.putExtra(DrinkDetailFragment.EXTRA_TRACK, mTrackUri);
         ((BaseActivity) getActivity()).openActivityOrFragment(intent);
 
         getListView().setItemChecked(position, true);
@@ -234,17 +235,17 @@ public class DrinksFragment extends ListFragment implements
         /** {@inheritDoc} */
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            return getActivity().getLayoutInflater().inflate(R.layout.list_item_session, parent,
+            return getActivity().getLayoutInflater().inflate(R.layout.list_item_drink, parent,
                     false);
         }
 
         /** {@inheritDoc} */
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            final TextView titleView = (TextView) view.findViewById(R.id.session_title);
-            final TextView subtitleView = (TextView) view.findViewById(R.id.session_subtitle);
+            final TextView titleView = (TextView) view.findViewById(R.id.drink_title);
+            final TextView subtitleView = (TextView) view.findViewById(R.id.drink_subtitle);
 
-            titleView.setText(cursor.getString(DrinksQuery.TITLE));
+            titleView.setText(cursor.getString(DrinksQuery.DRINK_ID));
 
             final String subtitle = "subtitle";
 
@@ -280,7 +281,7 @@ public class DrinksFragment extends ListFragment implements
     };
 
     /**
-     * {@link com.goliathonline.android.kegbot.provider.ScheduleContract.Sessions} query parameters.
+     * {@link com.goliathonline.android.kegbot.provider.KegbotContract.Drinks} query parameters.
      */
     private interface DrinksQuery {
         int _TOKEN = 0x1;
@@ -288,13 +289,22 @@ public class DrinksFragment extends ListFragment implements
         String[] PROJECTION = {
                 BaseColumns._ID,
                 KegbotContract.Drinks.DRINK_ID,
+                KegbotContract.Drinks.SESSION_ID,
+                KegbotContract.Drinks.STATUS,
+                KegbotContract.Drinks.USER_ID,
+                KegbotContract.Drinks.KEG_ID,
+                KegbotContract.Drinks.VOLUME,
                 KegbotContract.Drinks.DRINK_STARRED,
         };
 
         int _ID = 0;
         int DRINK_ID = 1;
-        int TITLE = 2;
-        int STARRED = 3;
+        int SESSION_ID = 2;
+        int STATUS = 3;
+        int USER_ID = 4;
+        int KEG_ID = 5;
+        int VOLUME = 6;
+        int STARRED = 7;
     }
 
     /**
@@ -304,28 +314,10 @@ public class DrinksFragment extends ListFragment implements
         int _TOKEN = 0x2;
 
         String[] PROJECTION = {
-        		KegbotContract.Kegs.KEG_NAME,
+        		KegbotContract.Kegs.KEG_ID,
         };
 
         int TRACK_NAME = 0;
         int TRACK_COLOR = 1;
-    }
-
-    /** {@link com.goliathonline.android.kegbot.provider.ScheduleContract.Sessions} search query
-     * parameters. */
-    private interface SearchQuery {
-        int _TOKEN = 0x3;
-
-        String[] PROJECTION = {
-                BaseColumns._ID,
-                KegbotContract.Drinks.DRINK_ID,
-                KegbotContract.Drinks.DRINK_STARRED,
-        };
-
-        int _ID = 0;
-        int DRINK_ID = 1;
-        int TITLE = 2;
-        int SEARCH_SNIPPET = 3;
-        int STARRED = 4;
     }
 }

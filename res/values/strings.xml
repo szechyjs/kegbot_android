@@ -29,6 +29,7 @@
 
     <string name="title_now_playing">Now Playing</string>
     <string name="title_schedule">Schedule</string>
+    <string name="title_drinks">Drinks</string>
     <string name="title_sessions">Sessions</string>
     <string name="title_session_detail">Session Information</string>
     <string name="title_starred">Starred</string>
