@@ -20,8 +20,8 @@ import com.goliathonline.android.kegbot.provider.KegbotContract.SearchSuggest;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Users;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
-import com.goliathonline.android.kegbot.provider.KegbotDatabase.DrinksUsers;
-import com.goliathonline.android.kegbot.provider.KegbotDatabase.DrinksKegs;
+import com.goliathonline.android.kegbot.provider.KegbotDatabase.DrinksUser;
+import com.goliathonline.android.kegbot.provider.KegbotDatabase.DrinksKeg;
 import com.goliathonline.android.kegbot.provider.KegbotDatabase.Tables;
 import com.goliathonline.android.kegbot.service.SyncService;
 import com.goliathonline.android.kegbot.util.SelectionBuilder;
@@ -63,8 +63,8 @@ public class KegbotProvider extends ContentProvider {
     private static final int DRINKS = 400;
     private static final int DRINKS_STARRED = 401;
     private static final int DRINKS_ID = 402;
-    private static final int DRINKS_ID_USERS = 403;
-    private static final int DRINKS_ID_KEGS = 404;
+    private static final int DRINKS_ID_USER = 403;
+    private static final int DRINKS_ID_KEG = 404;
 
     private static final int USERS = 500;
     private static final int USERS_ID = 501;
@@ -89,8 +89,8 @@ public class KegbotProvider extends ContentProvider {
         matcher.addURI(authority, "drinks", DRINKS);
         matcher.addURI(authority, "drinks/starred", DRINKS_STARRED);
         matcher.addURI(authority, "drinks/*", DRINKS_ID);
-        matcher.addURI(authority, "drinks/*/users", DRINKS_ID_USERS);
-        matcher.addURI(authority, "drinks/*/kegs", DRINKS_ID_KEGS);
+        matcher.addURI(authority, "drinks/*/users", DRINKS_ID_USER);
+        matcher.addURI(authority, "drinks/*/kegs", DRINKS_ID_KEG);
 
         matcher.addURI(authority, "users", USERS);
         matcher.addURI(authority, "users/*", USERS_ID);
@@ -125,10 +125,10 @@ public class KegbotProvider extends ContentProvider {
                 return Drinks.CONTENT_TYPE;
             case DRINKS_ID:
                 return Drinks.CONTENT_ITEM_TYPE;
-            case DRINKS_ID_USERS:
-                return Users.CONTENT_TYPE;
-            case DRINKS_ID_KEGS:
-                return Kegs.CONTENT_TYPE;
+            case DRINKS_ID_USER:
+                return Users.CONTENT_ITEM_TYPE;
+            case DRINKS_ID_KEG:
+                return Kegs.CONTENT_ITEM_TYPE;
             case USERS:
                 return Users.CONTENT_TYPE;
             case USERS_ID:
@@ -174,15 +174,15 @@ public class KegbotProvider extends ContentProvider {
                 getContext().getContentResolver().notifyChange(uri, null);
                 return Drinks.buildDrinkUri(values.getAsString(Drinks.DRINK_ID));
             }
-            case DRINKS_ID_USERS: {
-                db.insertOrThrow(Tables.DRINKS_USERS, null, values);
+            case DRINKS_ID_USER: {
+                db.insertOrThrow(Tables.DRINKS_USER, null, values);
                 getContext().getContentResolver().notifyChange(uri, null);
-                return Users.buildUserUri(values.getAsString(DrinksUsers.USER_ID));
+                return Users.buildUserUri(values.getAsString(DrinksUser.USER_ID));
             }
-            case DRINKS_ID_KEGS: {
-                db.insertOrThrow(Tables.DRINKS_KEGS, null, values);
+            case DRINKS_ID_KEG: {
+                db.insertOrThrow(Tables.DRINKS_KEG, null, values);
                 getContext().getContentResolver().notifyChange(uri, null);
-                return Kegs.buildKegUri(values.getAsString(DrinksKegs.KEG_ID));
+                return Kegs.buildKegUri(values.getAsString(DrinksKeg.KEG_ID));
             }
             case USERS: {
                 db.insertOrThrow(Tables.USERS, null, values);
@@ -270,14 +270,14 @@ public class KegbotProvider extends ContentProvider {
                 return builder.table(Tables.DRINKS)
                         .where(Drinks.DRINK_ID + "=?", drinkId);
             }
-            case DRINKS_ID_USERS: {
+            case DRINKS_ID_USER: {
                 final String drinkId = Drinks.getDrinkId(uri);
-                return builder.table(Tables.DRINKS_USERS)
+                return builder.table(Tables.DRINKS_USER)
                         .where(Drinks.DRINK_ID + "=?", drinkId);
             }
-            case DRINKS_ID_KEGS: {
+            case DRINKS_ID_KEG: {
                 final String drinkId = Drinks.getDrinkId(uri);
-                return builder.table(Tables.DRINKS_KEGS)
+                return builder.table(Tables.DRINKS_KEG)
                         .where(Drinks.DRINK_ID + "=?", drinkId);
             }
             case USERS: {
@@ -336,14 +336,14 @@ public class KegbotProvider extends ContentProvider {
                         .mapToTable(Drinks._ID, Tables.DRINKS)
                         .where(Qualified.DRINKS_DRINK_ID + "=?", drinkId);
             }
-            case DRINKS_ID_USERS: {
+            case DRINKS_ID_USER: {
                 final String drinkId = Drinks.getDrinkId(uri);
                 return builder.table(Tables.DRINKS_USERS_JOIN_USERS)
                         .mapToTable(Users._ID, Tables.USERS)
                         .mapToTable(Users.USER_ID, Tables.USERS)
                         .where(Qualified.DRINKS_USERS_DRINK_ID + "=?", drinkId);
             }
-            case DRINKS_ID_KEGS: {
+            case DRINKS_ID_KEG: {
                 final String drinkId = Drinks.getDrinkId(uri);
                 return builder.table(Tables.DRINKS_KEGS_JOIN_KEGS)
                         .mapToTable(Kegs._ID, Tables.KEGS)
@@ -389,7 +389,7 @@ public class KegbotProvider extends ContentProvider {
                 + Tables.DRINKS + ")";
 
         String KEG_DRINKS_COUNT = "(SELECT COUNT(" + Qualified.DRINKS_KEGS_DRINK_ID
-                + ") FROM " + Tables.DRINKS_KEGS + " WHERE "
+                + ") FROM " + Tables.DRINKS_KEG + " WHERE "
                 + Qualified.DRINKS_KEGS_KEG_ID + "=" + Qualified.KEGS_KEG_ID + ")";
     }
 
@@ -400,15 +400,15 @@ public class KegbotProvider extends ContentProvider {
     private interface Qualified {
         String DRINKS_DRINK_ID = Tables.DRINKS + "." + Drinks.DRINK_ID;
 
-        String DRINKS_KEGS_DRINK_ID = Tables.DRINKS_KEGS + "."
-                + DrinksKegs.DRINK_ID;
-        String DRINKS_KEGS_KEG_ID = Tables.DRINKS_KEGS + "."
-                + DrinksKegs.KEG_ID;
+        String DRINKS_KEGS_DRINK_ID = Tables.DRINKS_KEG + "."
+                + DrinksKeg.DRINK_ID;
+        String DRINKS_KEGS_KEG_ID = Tables.DRINKS_KEG + "."
+                + DrinksKeg.KEG_ID;
 
-        String DRINKS_USERS_DRINK_ID = Tables.DRINKS_USERS + "."
-                + DrinksUsers.DRINK_ID;
-        String DRINKS_USERS_USER_ID = Tables.DRINKS_USERS + "."
-                + DrinksUsers.USER_ID;
+        String DRINKS_USERS_DRINK_ID = Tables.DRINKS_USER + "."
+                + DrinksUser.DRINK_ID;
+        String DRINKS_USERS_USER_ID = Tables.DRINKS_USER + "."
+                + DrinksUser.USER_ID;
         
         String KEGS_KEG_ID = Tables.KEGS + "." + Kegs.KEG_ID;
 

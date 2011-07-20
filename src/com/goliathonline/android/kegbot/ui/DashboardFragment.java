@@ -48,7 +48,7 @@ public class DashboardFragment extends Fragment {
         // Attach event handlers
         root.findViewById(R.id.home_btn_drink).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                fireTrackerEvent("Schedule");
+                fireTrackerEvent("Drinks");
                 if (UIUtils.isHoneycombTablet(getActivity())) {
                     startActivity(new Intent(getActivity(), ScheduleMultiPaneActivity.class));
                 } else {
@@ -110,7 +110,7 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_keg).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 // Launch map of conference venue
-                fireTrackerEvent("Map");
+                fireTrackerEvent("Kegs");
                 startActivity(new Intent(getActivity(),
                         UIUtils.getMapActivityClass(getActivity())));
             }

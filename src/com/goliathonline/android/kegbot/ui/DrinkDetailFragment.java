@@ -107,13 +107,13 @@ public class DrinkDetailFragment extends Fragment implements
 
         final Intent intent = BaseActivity.fragmentArgumentsToIntent(getArguments());
         mDrinkUri = intent.getData();
+        mDrinkId = KegbotContract.Drinks.getDrinkId(mDrinkUri);
+        
         mKegUri = resolveKegUri(intent);
 
         if (mDrinkUri == null) {
             return;
         }
-
-        mDrinkId = KegbotContract.Drinks.getDrinkId(mDrinkUri);
 
         setHasOptionsMenu(true);
     }
@@ -222,7 +222,7 @@ public class DrinkDetailFragment extends Fragment implements
         if (kegUri != null) {
             return kegUri;
         } else {
-            return KegbotContract.Drinks.buildKegsDirUri(mDrinkId);
+            return KegbotContract.Drinks.buildKegUri(mDrinkId);
         }
     }
 
@@ -241,7 +241,8 @@ public class DrinkDetailFragment extends Fragment implements
         } else if (token == UsersQuery._TOKEN) {
             onUsersQueryComplete(cursor);
         } else {
-            cursor.close();
+        	if (cursor != null)
+        		cursor.close();
         }
     }
 
@@ -345,9 +346,9 @@ public class DrinkDetailFragment extends Fragment implements
                 return;
             }
 
-            // Use found track to build title-bar
+            // Use found keg to build title-bar
             ActivityHelper activityHelper = ((BaseActivity) getActivity()).getActivityHelper();
-            activityHelper.setActionBarTitle(cursor.getString(KegsQuery.KEG_NAME));
+            activityHelper.setActionBarTitle(cursor.getString(KegsQuery.KEG_ID));
             //activityHelper.setActionBarColor(cursor.getInt(KegsQuery.TRACK_COLOR));
         } finally {
             cursor.close();
@@ -641,7 +642,7 @@ public class DrinkDetailFragment extends Fragment implements
                 KegbotContract.Kegs.KEG_ID,
         };
 
-        int KEG_NAME = 0;
+        int KEG_ID = 0;
     }
 
     private interface UsersQuery {

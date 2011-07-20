@@ -99,7 +99,7 @@ public class KegbotContract {
 
         // TODO: shortcut primary track to offer sub-sorting here
         /** Default "ORDER BY" clause. */
-        public static final String DEFAULT_SORT = DrinksColumns.DRINK_ID + " ASC";
+        public static final String DEFAULT_SORT = DrinksColumns.DRINK_ID + " DESC";
 
         /** Build {@link Uri} for requested {@link #DRINK_ID}. */
         public static Uri buildDrinkUri(String drinkId) {
@@ -118,7 +118,7 @@ public class KegbotContract {
          * Build {@link Uri} that references any {@link Keg} associated with
          * the requested {@link #DRINK_ID}.
          */
-        public static Uri buildKegsDirUri(String drinkId) {
+        public static Uri buildKegUri(String drinkId) {
             return CONTENT_URI.buildUpon().appendPath(drinkId).appendPath(PATH_KEGS).build();
         }
 

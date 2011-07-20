@@ -208,8 +208,8 @@ public class DrinksFragment extends ListFragment implements
         final Cursor cursor = (Cursor)mAdapter.getItem(position);
         final String drinkId = cursor.getString(cursor.getColumnIndex(
                 KegbotContract.Drinks.DRINK_ID));
-        final Uri sessionUri = KegbotContract.Drinks.buildDrinkUri(drinkId);
-        final Intent intent = new Intent(Intent.ACTION_VIEW, sessionUri);
+        final Uri drinkUri = KegbotContract.Drinks.buildDrinkUri(drinkId);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, drinkUri);
         intent.putExtra(DrinkDetailFragment.EXTRA_TRACK, mTrackUri);
         ((BaseActivity) getActivity()).openActivityOrFragment(intent);
 

@@ -1,8 +1,11 @@
 package com.goliathonline.android.kegbot.provider;
 
+import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
 import com.goliathonline.android.kegbot.provider.KegbotContract.DrinksColumns;
+import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
 import com.goliathonline.android.kegbot.provider.KegbotContract.KegsColumns;
 import com.goliathonline.android.kegbot.provider.KegbotContract.SyncColumns;
+import com.goliathonline.android.kegbot.provider.KegbotContract.Users;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -33,8 +36,8 @@ public class KegbotDatabase extends SQLiteOpenHelper {
     	String DRINKS = "drinks";
     	String KEGS = "kegs";
     	String TAPS = "taps";
-        String DRINKS_USERS = "drinkss_userss";
-        String DRINKS_KEGS = "drinks_kegs";
+        String DRINKS_USER = "drinks_user";
+        String DRINKS_KEG = "drinks_keg";
 
         String SEARCH_SUGGEST = "search_suggest";
         
@@ -42,28 +45,35 @@ public class KegbotDatabase extends SQLiteOpenHelper {
         		+ "LEFT OUTER JOIN users ON drinks.user=users.id "
         		+ "LEFT OUTER JOIN kegs ON drinks.keg=kegs.id";
         
-        String DRINKS_USERS_JOIN_USERS = "drinks_users "
-            + "LEFT OUTER JOIN users ON drinks_users.user_id=users.user_id";
+        String DRINKS_USERS_JOIN_USERS = "drinks_user "
+            + "LEFT OUTER JOIN users ON drinks_user.user_id=users.user_id";
         
-        String DRINKS_KEGS_JOIN_DRINKS = "drinks_kegs "
-            + "LEFT OUTER JOIN drinks ON drinks_kegs.drink_id=drinks.drink_id";
+        String DRINKS_KEGS_JOIN_DRINKS = "drinks_keg "
+            + "LEFT OUTER JOIN drinks ON drinks_keg.drink_id=drinks.drink_id";
         
-        String DRINKS_KEGS_JOIN_KEGS = "drinks_kegs "
-            + "LEFT OUTER JOIN kegs ON drinks_kegs.keg_id=keg.keg_id";
+        String DRINKS_KEGS_JOIN_KEGS = "drinks_keg "
+            + "LEFT OUTER JOIN kegs ON drinks_keg.keg_id=kegs.keg_id";
         
-        String DRINKS_USERS_JOIN_DRINKS = "drinks_users "
-            + "LEFT OUTER JOIN drinks ON drinks_users.drink_id=drinks.drink_id";
+        String DRINKS_USERS_JOIN_DRINKS = "drinks_user "
+            + "LEFT OUTER JOIN drinks ON drinks_user.drink_id=drinks.drink_id";
 
     }
 
-    public interface DrinksUsers {
+    public interface DrinksUser {
     	String DRINK_ID = "drink_id";
     	String USER_ID = "user_id";
     }
     
-    public interface DrinksKegs {
+    public interface DrinksKeg {
     	String DRINK_ID = "drink_id";
     	String KEG_ID = "keg_id";
+    }
+    
+    /** {@code REFERENCES} clauses. */
+    private interface References {
+        String KEG_ID = "REFERENCES " + Tables.KEGS + "(" + Kegs.KEG_ID + ")";
+        String DRINK_ID = "REFERENCES " + Tables.DRINKS + "(" + Drinks.DRINK_ID + ")";
+        String USER_ID = "REFERENCES " + Tables.USERS + "(" + Users.USER_ID + ")";
     }
 
     public KegbotDatabase(Context context) {
@@ -99,10 +109,13 @@ public class KegbotDatabase extends SQLiteOpenHelper {
                 + KegsColumns.KEG_STARRED + " INTEGER NOT NULL DEFAULT 0,"
                 + SyncColumns.UPDATED + " INTEGER,"
                 + "UNIQUE (" + KegsColumns.KEG_ID + ") ON CONFLICT REPLACE)");
-
-        db.execSQL("CREATE TABLE " + Tables.SEARCH_SUGGEST + " ("
+        
+        db.execSQL("CREATE TABLE " + Tables.DRINKS_KEG + " ("
                 + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + SearchManager.SUGGEST_COLUMN_TEXT_1 + " TEXT NOT NULL)");
+                + DrinksKeg.DRINK_ID + " INTEGER NOT NULL " + References.DRINK_ID + ","
+                + DrinksKeg.KEG_ID + " INTEGER NOT NULL " + References.KEG_ID + ","
+                + "UNIQUE (" + DrinksKeg.DRINK_ID + ","
+                        + DrinksKeg.KEG_ID + ") ON CONFLICT REPLACE)");
 
     }
 
@@ -129,8 +142,9 @@ public class KegbotDatabase extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + Tables.DRINKS);
             db.execSQL("DROP TABLE IF EXISTS " + Tables.USERS);
             db.execSQL("DROP TABLE IF EXISTS " + Tables.KEGS);
-
-            db.execSQL("DROP TABLE IF EXISTS " + Tables.SEARCH_SUGGEST);
+            
+            db.execSQL("DROP TABLE IF EXISTS " + Tables.DRINKS_KEG);
+            db.execSQL("DROP TABLE IF EXISTS " + Tables.DRINKS_USER);
 
             onCreate(db);
         }
