@@ -19,6 +19,7 @@ package com.goliathonline.android.kegbot.io;
 import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
 import com.goliathonline.android.kegbot.provider.KegbotContract.SyncColumns;
+import com.goliathonline.android.kegbot.provider.KegbotDatabase.DrinksKeg;
 import com.goliathonline.android.kegbot.util.Lists;
 
 import android.content.ContentProviderOperation;
@@ -84,10 +85,13 @@ public class RemoteDrinksHandler extends JsonHandler {
                     Log.v(TAG, "found localUpdated=" + localUpdated + ", server=" + serverUpdated);
                 }
                 if (localUpdated != KegbotContract.UPDATED_NEVER) continue;
+                
+                final Uri drinkKegUri = Drinks.buildKegUri(drinkId);
 
                 // Clear any existing values for this session, treating the
                 // incoming details as authoritative.
                 batch.add(ContentProviderOperation.newDelete(drinkUri).build());
+                batch.add(ContentProviderOperation.newDelete(drinkKegUri).build());
 
                 final ContentProviderOperation.Builder builder = ContentProviderOperation
                         .newInsert(Drinks.CONTENT_URI);
@@ -114,6 +118,12 @@ public class RemoteDrinksHandler extends JsonHandler {
                 
                 // Normal session details ready, write to provider
                 batch.add(builder.build());
+                
+                // Assign kegs
+                final int kegId = drink.getInt("keg_id");
+                batch.add(ContentProviderOperation.newInsert(drinkKegUri)
+                		.withValue(DrinksKeg.DRINK_ID, drinkId)
+                		.withValue(DrinksKeg.KEG_ID, kegId).build());
             }
         }
 

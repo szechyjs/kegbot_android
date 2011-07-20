@@ -239,7 +239,7 @@ public class DrinkDetailFragment extends Fragment implements
         } else if (token == KegsQuery._TOKEN) {
             onKegQueryComplete(cursor);
         } else if (token == UsersQuery._TOKEN) {
-            onUsersQueryComplete(cursor);
+            //onUsersQueryComplete(cursor);
         } else {
         	if (cursor != null)
         		cursor.close();
@@ -263,7 +263,7 @@ public class DrinkDetailFragment extends Fragment implements
             //final String subtitle = UIUtils.formatSessionSubtitle(blockStart,
             //        blockEnd, roomName, getActivity());
 
-            mTitleString = cursor.getString(DrinksQuery.DRINK_ID);
+            mTitleString = "Drink " + cursor.getString(DrinksQuery.DRINK_ID);
             mTitle.setText(mTitleString);
             mSubtitle.setText("subtitle");
 
@@ -348,7 +348,7 @@ public class DrinkDetailFragment extends Fragment implements
 
             // Use found keg to build title-bar
             ActivityHelper activityHelper = ((BaseActivity) getActivity()).getActivityHelper();
-            activityHelper.setActionBarTitle(cursor.getString(KegsQuery.KEG_ID));
+            activityHelper.setActionBarTitle("Keg " + cursor.getString(KegsQuery.KEG_ID));
             //activityHelper.setActionBarColor(cursor.getInt(KegsQuery.TRACK_COLOR));
         } finally {
             cursor.close();
