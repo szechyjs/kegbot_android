@@ -212,7 +212,7 @@ public class ParserUtils {
 	 * Converts an {@link InputStream} to a {@link String}.
 	 */
 	public static String convertStreamToString(InputStream is) {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is), 8192);
 		StringBuilder sb = new StringBuilder();
 		String line = null;
 

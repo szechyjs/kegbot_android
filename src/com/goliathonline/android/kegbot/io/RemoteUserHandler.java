@@ -60,9 +60,7 @@ public class RemoteUserHandler extends JsonHandler {
         JSONObject keg = result.getJSONObject("user");
         
         final String userId = sanitizeId(keg.getString("username"));
-        Log.d(TAG, "UserID: " + userId);
         final Uri userUri = Users.buildUserUri(userId);
-        Log.d(TAG, "UserURI: " + userUri);
         
         // Check for existing details, only update when changed
         final ContentValues values = queryUserDetails(userUri, resolver);

@@ -20,18 +20,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.goliathonline.android.kegbot.io.JsonHandler.HandlerException;
-import com.goliathonline.android.kegbot.io.RemoteWorksheetsHandler.Tables;
 import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
 import com.goliathonline.android.kegbot.service.SyncService;
-import com.goliathonline.android.kegbot.util.NotifyingAsyncQueryHandler;
-
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.util.Log;
-
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONObject;
 
@@ -57,12 +52,11 @@ public class RemoteUsersHandler {
 			mUsers.add(userId);
 		}
     	mUsersQuery = true;
+    	mCursor.close();
     }
     
     public void updateUsers(RemoteExecutor executor) throws HandlerException
     {
-    	
-    	
     	for (String user : mUsers)
     	{
     		final String url = SyncService.WORKSHEETS_URL + "/users/" + user;
@@ -70,7 +64,6 @@ public class RemoteUsersHandler {
             final JsonHandler handler = new RemoteUserHandler();
             executor.execute(request, handler);
     	}
-    	
     }
 	
 	private interface UsersQuery {

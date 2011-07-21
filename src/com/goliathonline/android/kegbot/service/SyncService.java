@@ -23,8 +23,6 @@ import com.goliathonline.android.kegbot.io.LocalSearchSuggestHandler;
 import com.goliathonline.android.kegbot.io.LocalTracksHandler;
 import com.goliathonline.android.kegbot.io.RemoteDrinksHandler;
 import com.goliathonline.android.kegbot.io.RemoteExecutor;
-import com.goliathonline.android.kegbot.io.RemoteSpeakersHandler;
-import com.goliathonline.android.kegbot.io.RemoteVendorsHandler;
 import com.goliathonline.android.kegbot.io.RemoteWorksheetsHandler;
 import com.goliathonline.android.kegbot.provider.ScheduleProvider;
 import com.goliathonline.android.kegbot.R;

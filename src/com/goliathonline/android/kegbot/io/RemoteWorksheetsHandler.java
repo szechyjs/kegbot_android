@@ -106,6 +106,7 @@ public class RemoteWorksheetsHandler extends JsonHandler {
     
     private void updateUsers(Uri targetDir, ContentResolver resolver) 
     		throws HandlerException {
+    	Log.d(TAG, "updateUsers() for " + Tables.USERS);
     	RemoteUsersHandler handler = new RemoteUsersHandler(resolver);
     	handler.updateUsers(mExecutor);
     }

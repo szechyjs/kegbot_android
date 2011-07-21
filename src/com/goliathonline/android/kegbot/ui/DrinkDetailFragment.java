@@ -24,6 +24,7 @@ import com.goliathonline.android.kegbot.util.CatchNotesHelper;
 import com.goliathonline.android.kegbot.util.FractionalTouchDelegate;
 import com.goliathonline.android.kegbot.util.NotifyingAsyncQueryHandler;
 import com.goliathonline.android.kegbot.util.UIUtils;
+import com.goliathonline.android.kegbot.util.UnitUtils;
 import com.goliathonline.android.kegbot.R;
 
 import android.content.BroadcastReceiver;
@@ -316,7 +317,7 @@ public class DrinkDetailFragment extends Fragment implements
             }
 
             final View requirementsBlock = mRootView.findViewById(R.id.drink_pour_block);
-            final String sessionRequirements = cursor.getString(DrinksQuery.VOLUME) + "ml";
+            final String sessionRequirements = UnitUtils.mlToOz(cursor.getString(DrinksQuery.VOLUME)) + "oz";
             if (!TextUtils.isEmpty(sessionRequirements)) {
                 UIUtils.setTextMaybeHtml(mRequirements, sessionRequirements);
                 requirementsBlock.setVisibility(View.VISIBLE);

@@ -69,6 +69,9 @@ public class KegbotContract {
         String KEG_ID = "keg_id";
         String VOLUME_SIZE = "size_volume_ml";
         String KEG_STARRED = "keg_starred";
+        String KEG_NAME = "keg_name";
+        String KEG_ABV = "keg_abv";
+        String IMAGE_URL = "image_url";
     }
 
     public static final String CONTENT_AUTHORITY = "com.goliathonline.android.kegbot";

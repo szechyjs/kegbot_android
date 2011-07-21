@@ -66,6 +66,8 @@ public class RemoteKegHandler extends JsonHandler {
         int drink_id = 0;
         JSONObject result = parser.getJSONObject("result");
         JSONObject keg = result.getJSONObject("keg");
+        JSONObject type = result.getJSONObject("type");
+        JSONObject image = type.getJSONObject("image");
         
         final String kegId = sanitizeId(keg.getString("id"));
         final Uri kegUri = Kegs.buildKegUri(kegId);
@@ -121,6 +123,15 @@ public class RemoteKegHandler extends JsonHandler {
         
         if (keg.has("size_volume_ml"))
         	builder.withValue(Kegs.VOLUME_SIZE, keg.getDouble("size_volume_ml"));
+        
+        if (type.has("name"))
+        	builder.withValue(Kegs.KEG_NAME, type.getString("name"));
+        
+        if (type.has("abv"))
+        	builder.withValue(Kegs.KEG_ABV, type.getDouble("abv"));
+        
+        if (image.has("url"))
+        	builder.withValue(Kegs.IMAGE_URL, image.getString("url"));
         
         // Normal session details ready, write to provider
         batch.add(builder.build());

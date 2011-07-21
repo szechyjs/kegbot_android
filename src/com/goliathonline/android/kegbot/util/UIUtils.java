@@ -57,7 +57,7 @@ public class UIUtils {
      * Time zone to use when formatting all session times. To always use the
      * phone local time, use {@link TimeZone#getDefault()}.
      */
-    public static final TimeZone CONFERENCE_TIME_ZONE = TimeZone.getTimeZone("America/Los_Angeles");
+    public static final TimeZone CONFERENCE_TIME_ZONE = TimeZone.getDefault();
 
     public static final long CONFERENCE_START_MILLIS = ParserUtils.parseTime(
             "2011-07-10T09:00:00.000-07:00");
