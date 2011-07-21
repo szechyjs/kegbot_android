@@ -18,7 +18,6 @@ package com.goliathonline.android.kegbot.ui.tablet;
 
 import com.goliathonline.android.kegbot.provider.ScheduleContract;
 import com.goliathonline.android.kegbot.ui.BaseMultiPaneActivity;
-import com.goliathonline.android.kegbot.ui.TracksFragment;
 import com.goliathonline.android.kegbot.ui.VendorDetailFragment;
 import com.goliathonline.android.kegbot.ui.VendorsFragment;
 import com.goliathonline.android.kegbot.ui.phone.VendorDetailActivity;
@@ -50,7 +49,7 @@ public class VendorsMultiPaneActivity extends BaseMultiPaneActivity {
 
         Intent intent = new Intent();
         intent.setData(ScheduleContract.Tracks.CONTENT_URI);
-        intent.putExtra(TracksFragment.EXTRA_NEXT_TYPE, TracksFragment.NEXT_TYPE_VENDORS);
+        //intent.putExtra(TracksFragment.EXTRA_NEXT_TYPE, TracksFragment.NEXT_TYPE_VENDORS);
 
         final FragmentManager fm = getSupportFragmentManager();
         mTracksDropdownFragment = (TracksDropdownFragment) fm.findFragmentById(

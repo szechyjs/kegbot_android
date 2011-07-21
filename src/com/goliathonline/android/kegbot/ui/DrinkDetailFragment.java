@@ -71,8 +71,8 @@ public class DrinkDetailFragment extends Fragment implements
     public static final String EXTRA_TRACK = "com.goliathonline.android.kegbot.extra.KEG";
 
     private static final String TAG_SUMMARY = "summary";
-    private static final String TAG_NOTES = "notes";
-    private static final String TAG_LINKS = "links";
+    private static final String TAG_KEG = "keg";
+    private static final String TAG_SESSION = "session";
 
     private static StyleSpan sBoldSpan = new StyleSpan(Typeface.BOLD);
 
@@ -115,7 +115,7 @@ public class DrinkDetailFragment extends Fragment implements
             return;
         }
 
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
     }
 
     @Override
@@ -160,19 +160,19 @@ public class DrinkDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        mRootView = (ViewGroup) inflater.inflate(R.layout.fragment_session_detail, null);
+        mRootView = (ViewGroup) inflater.inflate(R.layout.fragment_drink_detail, null);
         mTabHost = (TabHost) mRootView.findViewById(android.R.id.tabhost);
         mTabHost.setup();
 
-        mTitle = (TextView) mRootView.findViewById(R.id.session_title);
-        mSubtitle = (TextView) mRootView.findViewById(R.id.session_subtitle);
+        mTitle = (TextView) mRootView.findViewById(R.id.drink_title);
+        mSubtitle = (TextView) mRootView.findViewById(R.id.drink_subtitle);
         mStarred = (CompoundButton) mRootView.findViewById(R.id.star_button);
 
         mStarred.setFocusable(true);
         mStarred.setClickable(true);
 
         // Larger target triggers star toggle
-        final View starParent = mRootView.findViewById(R.id.header_session);
+        final View starParent = mRootView.findViewById(R.id.header_drink);
         FractionalTouchDelegate.setupDelegate(starParent, mStarred, new RectF(0.6f, 0f, 1f, 0.8f));
 
         mAbstract = (TextView) mRootView.findViewById(R.id.session_abstract);
@@ -191,8 +191,8 @@ public class DrinkDetailFragment extends Fragment implements
     private void setupSummaryTab() {
         // Summary content comes from existing layout
         mTabHost.addTab(mTabHost.newTabSpec(TAG_SUMMARY)
-                .setIndicator(buildIndicator(R.string.session_summary))
-                .setContent(R.id.tab_session_summary));
+                .setIndicator(buildIndicator(R.string.drink_summary))
+                .setContent(R.id.tab_drink_summary));
     }
 
     /**
@@ -265,7 +265,10 @@ public class DrinkDetailFragment extends Fragment implements
 
             mTitleString = "Drink " + cursor.getString(DrinksQuery.DRINK_ID);
             mTitle.setText(mTitleString);
-            mSubtitle.setText("subtitle");
+            String userId = cursor.getString(DrinksQuery.USER_ID);
+            if (TextUtils.isEmpty(userId))
+            	userId = "guest";
+            mSubtitle.setText(userId);
 
             //mUrl = cursor.getString(DrinksQuery.URL);
             if (TextUtils.isEmpty(mUrl)) {
@@ -476,8 +479,8 @@ public class DrinkDetailFragment extends Fragment implements
                 LinkMovementMethod.getInstance());
 
         // Setup tab
-        mTabHost.addTab(mTabHost.newTabSpec(TAG_NOTES)
-                .setIndicator(buildIndicator(R.string.session_notes))
+        mTabHost.addTab(mTabHost.newTabSpec(TAG_KEG)
+                .setIndicator(buildIndicator(R.string.drink_keg))
                 .setContent(R.id.tab_session_notes));
     }
 
@@ -570,8 +573,8 @@ public class DrinkDetailFragment extends Fragment implements
      */
     private void setupLinksTab() {
         // Summary content comes from existing layout
-        mTabHost.addTab(mTabHost.newTabSpec(TAG_LINKS)
-                .setIndicator(buildIndicator(R.string.session_links))
+        mTabHost.addTab(mTabHost.newTabSpec(TAG_SESSION)
+                .setIndicator(buildIndicator(R.string.drink_session))
                 .setContent(R.id.tab_session_links));
     }
 

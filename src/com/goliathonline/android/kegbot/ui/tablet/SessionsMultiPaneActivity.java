@@ -18,11 +18,10 @@ package com.goliathonline.android.kegbot.ui.tablet;
 
 import com.goliathonline.android.kegbot.provider.ScheduleContract;
 import com.goliathonline.android.kegbot.ui.BaseMultiPaneActivity;
-import com.goliathonline.android.kegbot.ui.SessionDetailFragment;
-import com.goliathonline.android.kegbot.ui.SessionsFragment;
-import com.goliathonline.android.kegbot.ui.TracksFragment;
-import com.goliathonline.android.kegbot.ui.phone.SessionDetailActivity;
-import com.goliathonline.android.kegbot.ui.phone.SessionsActivity;
+import com.goliathonline.android.kegbot.ui.DrinkDetailFragment;
+import com.goliathonline.android.kegbot.ui.DrinksFragment;
+import com.goliathonline.android.kegbot.ui.phone.DrinkDetailActivity;
+import com.goliathonline.android.kegbot.ui.phone.DrinksActivity;
 import com.goliathonline.android.kegbot.R;
 
 import android.content.Intent;
@@ -48,7 +47,7 @@ public class SessionsMultiPaneActivity extends BaseMultiPaneActivity {
 
         Intent intent = new Intent();
         intent.setData(ScheduleContract.Tracks.CONTENT_URI);
-        intent.putExtra(TracksFragment.EXTRA_NEXT_TYPE, TracksFragment.NEXT_TYPE_SESSIONS);
+        //intent.putExtra(TracksFragment.EXTRA_NEXT_TYPE, TracksFragment.NEXT_TYPE_SESSIONS);
 
         final FragmentManager fm = getSupportFragmentManager();
         mTracksDropdownFragment = (TracksDropdownFragment) fm.findFragmentById(
@@ -70,16 +69,16 @@ public class SessionsMultiPaneActivity extends BaseMultiPaneActivity {
 
     @Override
     public FragmentReplaceInfo onSubstituteFragmentForActivityLaunch(String activityClassName) {
-        if (SessionsActivity.class.getName().equals(activityClassName)) {
+        if (DrinksActivity.class.getName().equals(activityClassName)) {
             return new FragmentReplaceInfo(
-                    SessionsFragment.class,
+                    DrinksFragment.class,
                     "sessions",
                     R.id.fragment_container_sessions);
-        } else if (SessionDetailActivity.class.getName().equals(activityClassName)) {
+        } else if (DrinkDetailActivity.class.getName().equals(activityClassName)) {
             findViewById(R.id.fragment_container_session_detail).setBackgroundColor(
                     0xffffffff);
             return new FragmentReplaceInfo(
-                    SessionDetailFragment.class,
+                    DrinkDetailFragment.class,
                     "session_detail",
                     R.id.fragment_container_session_detail);
         }

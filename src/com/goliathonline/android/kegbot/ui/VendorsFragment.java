@@ -107,7 +107,7 @@ public class VendorsFragment extends ListFragment implements
 
         // If caller launched us with specific track hint, pass it along when
         // launching vendor details. Also start a query to load the track info.
-        mTrackUri = intent.getParcelableExtra(SessionDetailFragment.EXTRA_TRACK);
+        mTrackUri = intent.getParcelableExtra(DrinkDetailFragment.EXTRA_TRACK);
         if (mTrackUri != null) {
             mHandler.startQuery(TracksQuery._TOKEN, mTrackUri, TracksQuery.PROJECTION);
         }

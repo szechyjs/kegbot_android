@@ -17,10 +17,10 @@
 package com.goliathonline.android.kegbot.ui.tablet;
 
 import com.goliathonline.android.kegbot.ui.BaseMultiPaneActivity;
-import com.goliathonline.android.kegbot.ui.SessionDetailFragment;
-import com.goliathonline.android.kegbot.ui.SessionsFragment;
-import com.goliathonline.android.kegbot.ui.phone.SessionDetailActivity;
-import com.goliathonline.android.kegbot.ui.phone.SessionsActivity;
+import com.goliathonline.android.kegbot.ui.DrinkDetailFragment;
+import com.goliathonline.android.kegbot.ui.DrinksFragment;
+import com.goliathonline.android.kegbot.ui.phone.DrinkDetailActivity;
+import com.goliathonline.android.kegbot.ui.phone.DrinksActivity;
 import com.goliathonline.android.kegbot.R;
 
 import android.app.FragmentBreadCrumbs;
@@ -71,17 +71,17 @@ public class ScheduleMultiPaneActivity extends BaseMultiPaneActivity implements
 
     @Override
     public FragmentReplaceInfo onSubstituteFragmentForActivityLaunch(String activityClassName) {
-        if (SessionsActivity.class.getName().equals(activityClassName)) {
+        if (DrinksActivity.class.getName().equals(activityClassName)) {
             getSupportFragmentManager().popBackStack();
             findViewById(R.id.fragment_container_schedule_detail).setBackgroundColor(0);
             return new FragmentReplaceInfo(
-                    SessionsFragment.class,
+                    DrinksFragment.class,
                     "sessions",
                     R.id.fragment_container_schedule_detail);
-        } else if (SessionDetailActivity.class.getName().equals(activityClassName)) {
+        } else if (DrinkDetailActivity.class.getName().equals(activityClassName)) {
             findViewById(R.id.fragment_container_schedule_detail).setBackgroundColor(0);
             return new FragmentReplaceInfo(
-                    SessionDetailFragment.class,
+                    DrinkDetailFragment.class,
                     "session_detail",
                     R.id.fragment_container_schedule_detail);
         }
@@ -92,9 +92,9 @@ public class ScheduleMultiPaneActivity extends BaseMultiPaneActivity implements
     protected void onBeforeCommitReplaceFragment(FragmentManager fm, FragmentTransaction ft,
             Fragment fragment) {
         super.onBeforeCommitReplaceFragment(fm, ft, fragment);
-        if (fragment instanceof SessionDetailFragment) {
+        if (fragment instanceof DrinkDetailFragment) {
             ft.addToBackStack(null);
-        } else if (fragment instanceof SessionsFragment) {
+        } else if (fragment instanceof DrinksFragment) {
             fm.popBackStack();
         }
         updateBreadCrumb();

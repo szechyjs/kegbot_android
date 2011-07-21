@@ -78,6 +78,10 @@
     <string name="session_requirements">Requirements</string>
     <string name="session_speakers">Speakers</string>
 
+    <string name="drink_summary">Summary</string>
+    <string name="drink_keg">Keg Info</string>
+    <string name="drink_session">Session</string>
+
     <string name="tag_stream">Realtime stream for</string>
     
     <string name="session_link_main">Web link</string>

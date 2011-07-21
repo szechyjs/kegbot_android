@@ -18,7 +18,7 @@ package com.goliathonline.android.kegbot.ui;
 
 import com.goliathonline.android.kegbot.provider.ScheduleContract.Sessions;
 import com.goliathonline.android.kegbot.provider.ScheduleContract.Vendors;
-import com.goliathonline.android.kegbot.ui.phone.SessionDetailActivity;
+import com.goliathonline.android.kegbot.ui.phone.DrinkDetailActivity;
 import com.goliathonline.android.kegbot.ui.phone.VendorDetailActivity;
 import com.goliathonline.android.kegbot.R;
 
@@ -46,7 +46,7 @@ public class StarredActivity extends BaseMultiPaneActivity {
     private TabHost mTabHost;
     private TabWidget mTabWidget;
 
-    private SessionsFragment mSessionsFragment;
+    private DrinksFragment mSessionsFragment;
     private VendorsFragment mVendorsFragment;
 
     @Override
@@ -89,9 +89,9 @@ public class StarredActivity extends BaseMultiPaneActivity {
         final Intent intent = new Intent(Intent.ACTION_VIEW, Sessions.CONTENT_STARRED_URI);
 
         final FragmentManager fm = getSupportFragmentManager();
-        mSessionsFragment = (SessionsFragment) fm.findFragmentByTag("sessions");
+        mSessionsFragment = (DrinksFragment) fm.findFragmentByTag("sessions");
         if (mSessionsFragment == null) {
-            mSessionsFragment = new SessionsFragment();
+            mSessionsFragment = new DrinksFragment();
             mSessionsFragment.setArguments(intentToFragmentArguments(intent));
             fm.beginTransaction()
                     .add(R.id.fragment_sessions, mSessionsFragment, "sessions")
@@ -151,10 +151,10 @@ public class StarredActivity extends BaseMultiPaneActivity {
         if (findViewById(R.id.fragment_container_starred_detail) != null) {
             // The layout we currently have has a detail container, we can add fragments there.
             findViewById(android.R.id.empty).setVisibility(View.GONE);
-            if (SessionDetailActivity.class.getName().equals(activityClassName)) {
+            if (DrinkDetailActivity.class.getName().equals(activityClassName)) {
                 clearSelectedItems();
                 return new FragmentReplaceInfo(
-                        SessionDetailFragment.class,
+                        DrinkDetailFragment.class,
                         "session_detail",
                         R.id.fragment_container_starred_detail);
             } else if (VendorDetailActivity.class.getName().equals(activityClassName)) {

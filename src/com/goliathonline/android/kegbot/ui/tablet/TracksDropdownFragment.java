@@ -18,9 +18,8 @@ package com.goliathonline.android.kegbot.ui.tablet;
 
 import com.goliathonline.android.kegbot.provider.ScheduleContract;
 import com.goliathonline.android.kegbot.ui.BaseActivity;
-import com.goliathonline.android.kegbot.ui.SessionDetailFragment;
+import com.goliathonline.android.kegbot.ui.DrinkDetailFragment;
 import com.goliathonline.android.kegbot.ui.TracksAdapter;
-import com.goliathonline.android.kegbot.ui.TracksFragment;
 import com.goliathonline.android.kegbot.util.NotifyingAsyncQueryHandler;
 import com.goliathonline.android.kegbot.util.UIUtils;
 import com.goliathonline.android.kegbot.R;
@@ -104,12 +103,12 @@ public class TracksDropdownFragment extends Fragment implements
         // Filter our tracks query to only include those with valid results
         String[] projection = TracksAdapter.TracksQuery.PROJECTION;
         String selection = null;
-        if (TracksFragment.NEXT_TYPE_SESSIONS.equals(mNextType)) {
+        if (NEXT_TYPE_SESSIONS.equals(mNextType)) {
             // Only show tracks with at least one session
             projection = TracksAdapter.TracksQuery.PROJECTION_WITH_SESSIONS_COUNT;
             selection = ScheduleContract.Tracks.SESSIONS_COUNT + ">0";
 
-        } else if (TracksFragment.NEXT_TYPE_VENDORS.equals(mNextType)) {
+        } else if (NEXT_TYPE_VENDORS.equals(mNextType)) {
             // Only show tracks with at least one vendor
             projection = TracksAdapter.TracksQuery.PROJECTION_WITH_VENDORS_COUNT;
             selection = ScheduleContract.Tracks.VENDORS_COUNT + ">0";
@@ -177,7 +176,7 @@ public class TracksDropdownFragment extends Fragment implements
         }
 
         mAdapter.setHasAllItem(true);
-        mAdapter.setIsSessions(TracksFragment.NEXT_TYPE_SESSIONS.equals(mNextType));
+        mAdapter.setIsSessions(NEXT_TYPE_SESSIONS.equals(mNextType));
         mAdapter.changeCursor(mCursor);
     }
 
@@ -214,10 +213,10 @@ public class TracksDropdownFragment extends Fragment implements
             trackColor = res.getColor(R.color.all_track_color);
             trackId = ScheduleContract.Tracks.ALL_TRACK_ID;
 
-            mTitle.setText(TracksFragment.NEXT_TYPE_SESSIONS.equals(mNextType)
+            mTitle.setText(NEXT_TYPE_SESSIONS.equals(mNextType)
                     ? R.string.all_sessions_title
                     : R.string.all_sandbox_title);
-            mAbstract.setText(TracksFragment.NEXT_TYPE_SESSIONS.equals(mNextType)
+            mAbstract.setText(NEXT_TYPE_SESSIONS.equals(mNextType)
                     ? R.string.all_sessions_subtitle
                     : R.string.all_sandbox_subtitle);
         }
@@ -240,7 +239,7 @@ public class TracksDropdownFragment extends Fragment implements
         if (loadTargetFragment) {
             final Intent intent = new Intent(Intent.ACTION_VIEW);
             final Uri trackUri = ScheduleContract.Tracks.buildTrackUri(trackId);
-            intent.putExtra(SessionDetailFragment.EXTRA_TRACK, trackUri);
+            intent.putExtra(DrinkDetailFragment.EXTRA_TRACK, trackUri);
 
             if (NEXT_TYPE_SESSIONS.equals(mNextType)) {
                 if (cursor == null) {

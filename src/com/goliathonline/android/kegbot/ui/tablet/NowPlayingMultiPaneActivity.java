@@ -18,9 +18,9 @@ package com.goliathonline.android.kegbot.ui.tablet;
 
 import com.goliathonline.android.kegbot.provider.ScheduleContract.Sessions;
 import com.goliathonline.android.kegbot.ui.BaseMultiPaneActivity;
-import com.goliathonline.android.kegbot.ui.SessionDetailFragment;
-import com.goliathonline.android.kegbot.ui.SessionsFragment;
-import com.goliathonline.android.kegbot.ui.phone.SessionDetailActivity;
+import com.goliathonline.android.kegbot.ui.DrinkDetailFragment;
+import com.goliathonline.android.kegbot.ui.DrinksFragment;
+import com.goliathonline.android.kegbot.ui.phone.DrinkDetailActivity;
 import com.goliathonline.android.kegbot.R;
 
 import android.content.Intent;
@@ -34,7 +34,7 @@ import android.view.ViewGroup;
  */
 public class NowPlayingMultiPaneActivity extends BaseMultiPaneActivity {
 
-    private SessionsFragment mSessionsFragment;
+    private DrinksFragment mSessionsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +46,9 @@ public class NowPlayingMultiPaneActivity extends BaseMultiPaneActivity {
         setContentView(R.layout.activity_now_playing);
 
         final FragmentManager fm = getSupportFragmentManager();
-        mSessionsFragment = (SessionsFragment) fm.findFragmentByTag("sessions");
+        mSessionsFragment = (DrinksFragment) fm.findFragmentByTag("sessions");
         if (mSessionsFragment == null) {
-            mSessionsFragment = new SessionsFragment();
+            mSessionsFragment = new DrinksFragment();
             mSessionsFragment.setArguments(intentToFragmentArguments(intent));
             fm.beginTransaction()
                     .add(R.id.fragment_container_sessions, mSessionsFragment, "sessions")
@@ -72,10 +72,10 @@ public class NowPlayingMultiPaneActivity extends BaseMultiPaneActivity {
     public FragmentReplaceInfo onSubstituteFragmentForActivityLaunch(
             String activityClassName) {
         findViewById(android.R.id.empty).setVisibility(View.GONE);
-        if (SessionDetailActivity.class.getName().equals(activityClassName)) {
+        if (DrinkDetailActivity.class.getName().equals(activityClassName)) {
             clearSelectedItems();
             return new FragmentReplaceInfo(
-                    SessionDetailFragment.class,
+                    DrinkDetailFragment.class,
                     "session_detail",
                     R.id.fragment_container_now_playing_detail);
         }
