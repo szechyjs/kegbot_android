@@ -19,7 +19,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/body_padding_large">
 
-    <com.goliathonline.android.kegbot.ui.widget.BezelImageView android:id="@+id/speaker_image"
+    <com.goliathonline.android.kegbot.ui.widget.BezelImageView android:id="@+id/user_image"
         android:scaleType="centerCrop"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -28,29 +28,19 @@
         android:layout_marginRight="@dimen/speaker_image_padding"
         android:src="@drawable/speaker_image_empty" />
 
-    <TextView android:id="@+id/speaker_header"
-        android:layout_toRightOf="@id/speaker_image"
+    <TextView android:id="@+id/user_header"
+        android:layout_toRightOf="@id/user_image"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         style="@style/TextHeader3" />
 
-    <TextView android:id="@+id/speaker_abstract"
-        android:layout_below="@id/speaker_header"
-        android:layout_alignLeft="@id/speaker_header"
-        android:layout_alignRight="@id/speaker_header"
+    <TextView android:id="@+id/user_abstract"
+        android:layout_below="@id/user_header"
+        android:layout_alignLeft="@id/user_header"
+        android:layout_alignRight="@id/user_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        style="@style/TextBody" />
-
-    <TextView android:id="@+id/speaker_url"
-        android:layout_below="@id/speaker_abstract"
-        android:layout_alignLeft="@id/speaker_header"
-        android:layout_alignRight="@id/speaker_header"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/body_padding_medium"
-        android:autoLink="web"
         style="@style/TextBody" />
 </RelativeLayout>

@@ -148,12 +148,12 @@ public class DrinkDetailFragment extends Fragment implements
         }
 
         // Start background queries to load session and track details
-        final Uri usersUri = KegbotContract.Drinks.buildUsersDirUri(mDrinkId);
+        final Uri usersUri = KegbotContract.Drinks.buildUserUri(mDrinkId);
 
         mHandler = new NotifyingAsyncQueryHandler(getActivity().getContentResolver(), this);
         mHandler.startQuery(DrinksQuery._TOKEN, mDrinkUri, DrinksQuery.PROJECTION);
         mHandler.startQuery(KegsQuery._TOKEN, mKegUri, KegsQuery.PROJECTION);
-        mHandler.startQuery(UsersQuery._TOKEN, usersUri, UsersQuery.PROJECTION);
+        mHandler.startQuery(UserQuery._TOKEN, usersUri, UserQuery.PROJECTION);
     }
 
     @Override
@@ -176,7 +176,7 @@ public class DrinkDetailFragment extends Fragment implements
         FractionalTouchDelegate.setupDelegate(starParent, mStarred, new RectF(0.6f, 0f, 1f, 0.8f));
 
         mAbstract = (TextView) mRootView.findViewById(R.id.session_abstract);
-        mRequirements = (TextView) mRootView.findViewById(R.id.session_requirements);
+        mRequirements = (TextView) mRootView.findViewById(R.id.drink_pour_details);
 
         setupSummaryTab();
         setupNotesTab();
@@ -238,8 +238,8 @@ public class DrinkDetailFragment extends Fragment implements
             onDrinkQueryComplete(cursor);
         } else if (token == KegsQuery._TOKEN) {
             onKegQueryComplete(cursor);
-        } else if (token == UsersQuery._TOKEN) {
-            //onUsersQueryComplete(cursor);
+        } else if (token == UserQuery._TOKEN) {
+            onUsersQueryComplete(cursor);
         } else {
         	if (cursor != null)
         		cursor.close();
@@ -315,8 +315,8 @@ public class DrinkDetailFragment extends Fragment implements
                 mAbstract.setVisibility(View.GONE);
             }
 
-            final View requirementsBlock = mRootView.findViewById(R.id.session_requirements_block);
-            final String sessionRequirements = ""; //cursor.getString(DrinksQuery.REQUIREMENTS);
+            final View requirementsBlock = mRootView.findViewById(R.id.drink_pour_block);
+            final String sessionRequirements = cursor.getString(DrinksQuery.VOLUME) + "ml";
             if (!TextUtils.isEmpty(sessionRequirements)) {
                 UIUtils.setTextMaybeHtml(mRequirements, sessionRequirements);
                 requirementsBlock.setVisibility(View.VISIBLE);
@@ -364,31 +364,27 @@ public class DrinkDetailFragment extends Fragment implements
             // TODO: remove any existing speakers from layout, since this cursor
             // might be from a data change notification.
             final ViewGroup speakersGroup = (ViewGroup)
-                    mRootView.findViewById(R.id.session_speakers_block);
+                    mRootView.findViewById(R.id.drink_user_block);
             final LayoutInflater inflater = getActivity().getLayoutInflater();
 
             boolean hasSpeakers = false;
 
             while (cursor.moveToNext()) {
-                final String speakerName = cursor.getString(UsersQuery.USER_NAME);
-                if (TextUtils.isEmpty(speakerName)) {
+                final String userName = cursor.getString(UserQuery.USER_ID);
+                if (TextUtils.isEmpty(userName)) {
                     continue;
                 }
 
-                final String speakerImageUrl = cursor.getString(UsersQuery.USER_IMAGE_URL);
+                final String speakerImageUrl = cursor.getString(UserQuery.USER_IMAGE_URL);
 
-                String speakerHeader = speakerName;
+                String speakerHeader = userName;
 
                 final View speakerView = inflater
-                        .inflate(R.layout.speaker_detail, speakersGroup, false);
+                        .inflate(R.layout.user_detail, speakersGroup, false);
                 final TextView speakerHeaderView = (TextView) speakerView
-                        .findViewById(R.id.speaker_header);
+                        .findViewById(R.id.user_header);
                 final ImageView speakerImgView = (ImageView) speakerView
-                        .findViewById(R.id.speaker_image);
-                final TextView speakerUrlView = (TextView) speakerView
-                        .findViewById(R.id.speaker_url);
-                final TextView speakerAbstractView = (TextView) speakerView
-                        .findViewById(R.id.speaker_abstract);
+                        .findViewById(R.id.user_image);
 
                 if (!TextUtils.isEmpty(speakerImageUrl)) {
                     BitmapUtils.fetchImage(getActivity(), speakerImageUrl, null, null,
@@ -402,9 +398,6 @@ public class DrinkDetailFragment extends Fragment implements
                 }
 
                 speakerHeaderView.setText(speakerHeader);
-                //UIUtils.setTextMaybeHtml(speakerAbstractView, speakerAbstract);
-
-                speakerUrlView.setVisibility(View.GONE);
 
                 speakersGroup.addView(speakerView);
                 hasSpeakers = true;
@@ -648,15 +641,15 @@ public class DrinkDetailFragment extends Fragment implements
         int KEG_ID = 0;
     }
 
-    private interface UsersQuery {
+    private interface UserQuery {
         int _TOKEN = 0x3;
 
         String[] PROJECTION = {
-        		KegbotContract.Users.USER_NAME,
+        		KegbotContract.Users.USER_ID,
         		KegbotContract.Users.USER_IMAGE_URL,
         };
 
-        int USER_NAME = 0;
+        int USER_ID = 0;
         int USER_IMAGE_URL = 1;
     }
 }

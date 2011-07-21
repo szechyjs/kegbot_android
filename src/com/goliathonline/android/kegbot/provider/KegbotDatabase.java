@@ -6,6 +6,7 @@ import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
 import com.goliathonline.android.kegbot.provider.KegbotContract.KegsColumns;
 import com.goliathonline.android.kegbot.provider.KegbotContract.SyncColumns;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Users;
+import com.goliathonline.android.kegbot.provider.KegbotContract.UsersColumns;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -110,12 +111,27 @@ public class KegbotDatabase extends SQLiteOpenHelper {
                 + SyncColumns.UPDATED + " INTEGER,"
                 + "UNIQUE (" + KegsColumns.KEG_ID + ") ON CONFLICT REPLACE)");
         
+        db.execSQL("CREATE TABLE " + Tables.USERS + " ("
+        		+ BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+        		+ UsersColumns.USER_ID + " TEXT NOT NULL,"
+        		+ UsersColumns.USER_NAME + " TEXT,"
+        		+ UsersColumns.USER_IMAGE_URL + " TEXT,"
+        		+ SyncColumns.UPDATED + " INTEGER,"
+        		+ "UNIQUE (" + UsersColumns.USER_ID + ") ON CONFLICT REPLACE)");
+        
         db.execSQL("CREATE TABLE " + Tables.DRINKS_KEG + " ("
                 + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + DrinksKeg.DRINK_ID + " INTEGER NOT NULL " + References.DRINK_ID + ","
                 + DrinksKeg.KEG_ID + " INTEGER NOT NULL " + References.KEG_ID + ","
                 + "UNIQUE (" + DrinksKeg.DRINK_ID + ","
                         + DrinksKeg.KEG_ID + ") ON CONFLICT REPLACE)");
+        
+        db.execSQL("CREATE TABLE " + Tables.DRINKS_USER + " ("
+                + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + DrinksUser.DRINK_ID + " INTEGER NOT NULL " + References.DRINK_ID + ","
+                + DrinksUser.USER_ID + " INTEGER NOT NULL " + References.USER_ID + ","
+                + "UNIQUE (" + DrinksUser.DRINK_ID + ","
+                        + DrinksUser.USER_ID + ") ON CONFLICT REPLACE)");
 
     }
 

@@ -20,6 +20,7 @@ import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
 import com.goliathonline.android.kegbot.provider.KegbotContract.SyncColumns;
 import com.goliathonline.android.kegbot.provider.KegbotDatabase.DrinksKeg;
+import com.goliathonline.android.kegbot.provider.KegbotDatabase.DrinksUser;
 import com.goliathonline.android.kegbot.util.Lists;
 
 import android.content.ContentProviderOperation;
@@ -45,7 +46,7 @@ import static com.goliathonline.android.kegbot.util.ParserUtils.sanitizeId;
  * entries. Assumes that the remote source is a Google Spreadsheet.
  */
 public class RemoteDrinksHandler extends JsonHandler {
-    private static final String TAG = "SessionsHandler";
+    private static final String TAG = "DrinksHandler";
 
     /**
      * Custom format used internally that matches expected concatenation of
@@ -87,6 +88,7 @@ public class RemoteDrinksHandler extends JsonHandler {
                 if (localUpdated != KegbotContract.UPDATED_NEVER) continue;
                 
                 final Uri drinkKegUri = Drinks.buildKegUri(drinkId);
+                final Uri drinkUserUri = Drinks.buildUserUri(drinkId);
 
                 // Clear any existing values for this session, treating the
                 // incoming details as authoritative.
@@ -124,6 +126,15 @@ public class RemoteDrinksHandler extends JsonHandler {
                 batch.add(ContentProviderOperation.newInsert(drinkKegUri)
                 		.withValue(DrinksKeg.DRINK_ID, drinkId)
                 		.withValue(DrinksKeg.KEG_ID, kegId).build());
+                
+                // Assign users
+                if (drink.has("user_id"))
+                {
+                	final String userId = drink.getString("user_id");
+                	batch.add(ContentProviderOperation.newInsert(drinkUserUri)
+                			.withValue(DrinksUser.DRINK_ID, drinkId)
+                			.withValue(DrinksUser.USER_ID, userId).build());
+                }
             }
         }
 

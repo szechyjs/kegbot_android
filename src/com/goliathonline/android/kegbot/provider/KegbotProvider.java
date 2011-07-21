@@ -62,9 +62,11 @@ public class KegbotProvider extends ContentProvider {
 
     private static final int DRINKS = 400;
     private static final int DRINKS_STARRED = 401;
-    private static final int DRINKS_ID = 402;
-    private static final int DRINKS_ID_USER = 403;
-    private static final int DRINKS_ID_KEG = 404;
+    private static final int DRINKS_USERS = 402;
+    private static final int DRINKS_ID = 403;
+    private static final int DRINKS_ID_USER = 404;
+    private static final int DRINKS_ID_KEG = 405;
+
 
     private static final int USERS = 500;
     private static final int USERS_ID = 501;
@@ -87,6 +89,7 @@ public class KegbotProvider extends ContentProvider {
         matcher.addURI(authority, "kegs/*/drinks", KEGS_ID_DRINKS);
 
         matcher.addURI(authority, "drinks", DRINKS);
+        matcher.addURI(authority, "drinks/users", DRINKS_USERS);
         matcher.addURI(authority, "drinks/starred", DRINKS_STARRED);
         matcher.addURI(authority, "drinks/*", DRINKS_ID);
         matcher.addURI(authority, "drinks/*/users", DRINKS_ID_USER);
@@ -129,6 +132,8 @@ public class KegbotProvider extends ContentProvider {
                 return Users.CONTENT_ITEM_TYPE;
             case DRINKS_ID_KEG:
                 return Kegs.CONTENT_ITEM_TYPE;
+            case DRINKS_USERS:
+            	return Users.CONTENT_TYPE;
             case USERS:
                 return Users.CONTENT_TYPE;
             case USERS_ID:
@@ -280,6 +285,9 @@ public class KegbotProvider extends ContentProvider {
                 return builder.table(Tables.DRINKS_KEG)
                         .where(Drinks.DRINK_ID + "=?", drinkId);
             }
+            case DRINKS_USERS: {
+            	return builder.table(Tables.DRINKS_USER);
+            }
             case USERS: {
                 return builder.table(Tables.USERS);
             }
@@ -349,6 +357,9 @@ public class KegbotProvider extends ContentProvider {
                         .mapToTable(Kegs._ID, Tables.KEGS)
                         .mapToTable(Kegs.KEG_ID, Tables.KEGS)
                         .where(Qualified.DRINKS_KEGS_DRINK_ID + "=?", drinkId);
+            }
+            case DRINKS_USERS: {
+            	return builder.table(Tables.DRINKS_USER);
             }
             case USERS: {
                 return builder.table(Tables.USERS);

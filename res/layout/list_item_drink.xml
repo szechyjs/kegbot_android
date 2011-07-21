@@ -27,16 +27,27 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         style="@style/ListItemContent">
+        
+        <com.goliathonline.android.kegbot.ui.widget.BezelImageView
+        	android:id="@+id/user_image"
+	        android:scaleType="centerCrop"
+			android:layout_alignParentLeft="true"
+	        android:layout_width="@dimen/speaker_image_size"
+	        android:layout_height="@dimen/speaker_image_size"
+	        android:layout_marginRight="@dimen/speaker_image_padding"
+	        android:src="@drawable/speaker_image_empty" />
+	        
         <TextView android:id="@+id/drink_title"
             android:layout_toLeftOf="@id/star_button"
-            android:layout_alignParentLeft="true"
+            android:layout_toRightOf="@id/user_image"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             style="@style/ListItemTitle" />
+            
         <TextView android:id="@+id/drink_subtitle"
-            android:layout_below="@id/session_title"
+            android:layout_below="@id/drink_title"
+            android:layout_toRightOf="@id/user_image"
             android:layout_toLeftOf="@id/star_button"
-            android:layout_alignParentLeft="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             style="@style/ListItemSubtitle" />

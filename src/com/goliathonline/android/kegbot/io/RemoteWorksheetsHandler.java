@@ -19,6 +19,7 @@ package com.goliathonline.android.kegbot.io;
 import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
+import com.goliathonline.android.kegbot.provider.KegbotContract.Users;
 import com.goliathonline.android.kegbot.service.SyncService;
 import com.goliathonline.android.kegbot.util.Lists;
 import com.goliathonline.android.kegbot.util.ParserUtils;
@@ -60,7 +61,7 @@ public class RemoteWorksheetsHandler extends JsonHandler {
         	// consider updating each spreadsheet based on update timestamp
         	considerUpdate(Tables.DRINKS, id, Drinks.CONTENT_URI, resolver);
         	considerUpdate(Tables.KEGS, id, Kegs.CONTENT_URI, resolver);
-        	//considerUpdate(sheets, Worksheets.VENDORS, Vendors.CONTENT_URI, resolver);
+        	updateUsers(Users.CONTENT_URI, resolver);
         }
         return Lists.newArrayList();
     }
@@ -101,6 +102,12 @@ public class RemoteWorksheetsHandler extends JsonHandler {
         else {
             throw new IllegalArgumentException("Unknown worksheet type");
         }
+    }
+    
+    private void updateUsers(Uri targetDir, ContentResolver resolver) 
+    		throws HandlerException {
+    	RemoteUsersHandler handler = new RemoteUsersHandler(resolver);
+    	handler.updateUsers(mExecutor);
     }
 
     interface Tables {

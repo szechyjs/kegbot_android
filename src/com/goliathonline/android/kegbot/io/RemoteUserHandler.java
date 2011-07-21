@@ -19,6 +19,7 @@ package com.goliathonline.android.kegbot.io;
 import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
 import com.goliathonline.android.kegbot.provider.KegbotContract.SyncColumns;
+import com.goliathonline.android.kegbot.provider.KegbotContract.Users;
 import com.goliathonline.android.kegbot.util.Lists;
 
 import android.content.ContentProviderOperation;
@@ -29,10 +30,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,17 +40,10 @@ import static com.goliathonline.android.kegbot.util.ParserUtils.sanitizeId;
  * Handle a remote {@link XmlPullParser} that defines a set of {@link Sessions}
  * entries. Assumes that the remote source is a Google Spreadsheet.
  */
-public class RemoteKegHandler extends JsonHandler {
-    private static final String TAG = "KegHandler";
+public class RemoteUserHandler extends JsonHandler {
+    private static final String TAG = "UserHandler";
 
-    /**
-     * Custom format used internally that matches expected concatenation of
-     * {@link Columns#SESSION_DATE} and {@link Columns#SESSION_TIME}.
-     */
-    private static final SimpleDateFormat sTimeFormat = new SimpleDateFormat(
-            "EEEE MMM d yyyy h:mma Z", Locale.US);
-
-    public RemoteKegHandler() {
+    public RemoteUserHandler() {
         super(KegbotContract.CONTENT_AUTHORITY);
     }
 
@@ -63,78 +54,54 @@ public class RemoteKegHandler extends JsonHandler {
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
         // Walk document, parsing any incoming entries
-        int drink_id = 0;
+        if(!parser.has("result"))
+        	return batch;
         JSONObject result = parser.getJSONObject("result");
-        JSONObject keg = result.getJSONObject("keg");
+        JSONObject keg = result.getJSONObject("user");
         
-        final String kegId = sanitizeId(keg.getString("id"));
-        final Uri kegUri = Kegs.buildKegUri(kegId);
+        final String userId = sanitizeId(keg.getString("username"));
+        Log.d(TAG, "UserID: " + userId);
+        final Uri userUri = Users.buildUserUri(userId);
+        Log.d(TAG, "UserURI: " + userUri);
         
         // Check for existing details, only update when changed
-        final ContentValues values = queryKegDetails(kegUri, resolver);
+        final ContentValues values = queryUserDetails(userUri, resolver);
         final long localUpdated = values.getAsLong(SyncColumns.UPDATED);
         final long serverUpdated = 500; //entry.getUpdated();
         if (Log.isLoggable(TAG, Log.VERBOSE)) {
-            Log.v(TAG, "found keg " + kegId);
+            Log.v(TAG, "found user " + userId);
             Log.v(TAG, "found localUpdated=" + localUpdated + ", server=" + serverUpdated);
         }
 
         // Clear any existing values for this session, treating the
         // incoming details as authoritative.
-        batch.add(ContentProviderOperation.newDelete(kegUri).build());
+        batch.add(ContentProviderOperation.newDelete(userUri).build());
 
         final ContentProviderOperation.Builder builder = ContentProviderOperation
-                .newInsert(Kegs.CONTENT_URI);
+                .newInsert(Users.CONTENT_URI);
 
         builder.withValue(SyncColumns.UPDATED, serverUpdated);
-        builder.withValue(Kegs.KEG_ID, kegId);
+        builder.withValue(Users.USER_ID, userId);
         
-        // Inherit starred value from previous row
-        if (values.containsKey(Kegs.KEG_STARRED)) {
-            builder.withValue(Kegs.KEG_STARRED,
-                    values.getAsInteger(Kegs.KEG_STARRED));
+        if (keg.has("image"))
+        {
+        	JSONObject image = keg.getJSONObject("image");
+        	if (image.has("url"))
+        		builder.withValue(Users.USER_IMAGE_URL, image.getString("url"));
         }
-        
-        if (keg.has("status"))
-        	builder.withValue(Kegs.STATUS, keg.getString("status"));
-        
-        if (keg.has("volume_ml_remain"))
-        	builder.withValue(Kegs.VOLUME_REMAIN, keg.getDouble("volume_ml_remain"));
-        
-        if (keg.has("description"))
-        	builder.withValue(Kegs.DESCRIPTION, keg.getString("description"));
-        
-        if (keg.has("type_id"))
-        	builder.withValue(Kegs.TYPE_ID, keg.getString("type_id"));
-        
-        if (keg.has("size_id"))
-        	builder.withValue(Kegs.SIZE_ID, keg.getInt("size_id"));
 
-        if (keg.has("percent_full"))
-        	builder.withValue(Kegs.PERCENT_FULL, keg.getDouble("percent_full"));
-
-        if (keg.has("size_name"))
-        	builder.withValue(Kegs.SIZE_NAME, keg.getString("size_name"));
-
-        if (keg.has("spilled_ml"))
-        	builder.withValue(Kegs.VOLUME_SPILL, keg.getDouble("spilled_ml"));
-        
-        if (keg.has("size_volume_ml"))
-        	builder.withValue(Kegs.VOLUME_SIZE, keg.getDouble("size_volume_ml"));
-        
         // Normal session details ready, write to provider
         batch.add(builder.build());
 
         return batch;
     }
 
-    private static ContentValues queryKegDetails(Uri uri, ContentResolver resolver) {
+    private static ContentValues queryUserDetails(Uri uri, ContentResolver resolver) {
         final ContentValues values = new ContentValues();
-        final Cursor cursor = resolver.query(uri, KegsQuery.PROJECTION, null, null, null);
+        final Cursor cursor = resolver.query(uri, UserQuery.PROJECTION, null, null, null);
         try {
             if (cursor.moveToFirst()) {
-                values.put(SyncColumns.UPDATED, cursor.getLong(KegsQuery.UPDATED));
-                values.put(Kegs.KEG_STARRED, cursor.getInt(KegsQuery.STARRED));
+                values.put(SyncColumns.UPDATED, cursor.getLong(UserQuery.UPDATED));
             } else {
                 values.put(SyncColumns.UPDATED, KegbotContract.UPDATED_NEVER);
             }
@@ -144,13 +111,15 @@ public class RemoteKegHandler extends JsonHandler {
         return values;
     }
 
-    private interface KegsQuery {
+    private interface UserQuery {
         String[] PROJECTION = {
                 SyncColumns.UPDATED,
-                Kegs.KEG_STARRED,
+                Users.USER_ID,
+                Users.USER_IMAGE_URL,
         };
 
         int UPDATED = 0;
-        int STARRED = 1;
+        int USER_ID = 1;
+        int USER_IMAGE_URL = 2;
     }
 }

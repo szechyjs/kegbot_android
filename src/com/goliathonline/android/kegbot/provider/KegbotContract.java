@@ -107,11 +107,19 @@ public class KegbotContract {
         }
         
         /**
-         * Build {@link Uri} that references any {@link Users} associated
+         * Build {@link Uri} that references that {@link Users} associated
          * with the requested {@link #DRINK_ID}.
          */
-        public static Uri buildUsersDirUri(String drinkId) {
+        public static Uri buildUserUri(String drinkId) {
             return CONTENT_URI.buildUpon().appendPath(drinkId).appendPath(PATH_USERS).build();
+        }
+        
+        /**
+         * Build {@link Uri} that references any {@link Users} associated
+         * with {@link Drinks}.
+         */
+        public static Uri buildUsersDirUri() {
+            return CONTENT_URI.buildUpon().appendPath(PATH_USERS).build();
         }
         
         /**

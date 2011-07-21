@@ -16,8 +16,6 @@
 
 package com.goliathonline.android.kegbot.io;
 
-import com.goliathonline.android.kegbot.io.JsonHandler.HandlerException;
-import com.goliathonline.android.kegbot.io.RemoteWorksheetsHandler.Tables;
 import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
 import com.goliathonline.android.kegbot.service.SyncService;
