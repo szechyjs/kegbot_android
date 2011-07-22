@@ -128,6 +128,7 @@ public class KegbotDatabase extends SQLiteOpenHelper {
         		+ TapsColumns.BEER_NAME + " TEXT,"
         		+ TapsColumns.DESCRIPTION + " TEXT,"
         		+ TapsColumns.LAST_TEMP + " DOUBLE,"
+        		+ TapsColumns.IMAGE_URL + " TEXT,"
         		+ SyncColumns.UPDATED + " INTEGER,"
         		+ "UNIQUE (" + TapsColumns.TAP_ID + ") ON CONFLICT REPLACE)");
         

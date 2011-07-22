@@ -16,21 +16,27 @@
 
 package com.goliathonline.android.kegbot.ui;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract;
-import com.goliathonline.android.kegbot.ui.tablet.NowPlayingMultiPaneActivity;
+import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.util.AnalyticsUtils;
+import com.goliathonline.android.kegbot.util.BitmapUtils;
+import com.goliathonline.android.kegbot.util.NotifyingAsyncQueryHandler;
 import com.goliathonline.android.kegbot.util.UIUtils;
+import com.goliathonline.android.kegbot.util.UnitUtils;
 import com.goliathonline.android.kegbot.R;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.text.format.DateUtils;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -39,12 +45,23 @@ import android.widget.TextView;
  * It also shows a 'Realtime Search' button on phones, as a replacement for the
  * {@link TagStreamFragment} that is visible on tablets on the home screen.
  */
-public class WhatsOnFragment extends Fragment {
+public class WhatsOnFragment extends Fragment  implements
+		NotifyingAsyncQueryHandler.AsyncQueryListener {
 
-    private Handler mMessageHandler = new Handler();
-
-    private TextView mCountdownTextView;
     private ViewGroup mRootView;
+    private Uri mTapUri;
+    private NotifyingAsyncQueryHandler mHandler;
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        mTapUri = KegbotContract.Taps.CONTENT_URI;
+        
+        mHandler = new NotifyingAsyncQueryHandler(getActivity().getContentResolver(), this);
+        mHandler.startQuery(TapsQuery._TOKEN, mTapUri, TapsQuery.PROJECTION);
+        
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,23 +79,10 @@ public class WhatsOnFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mMessageHandler.removeCallbacks(mCountdownRunnable);
     }
 
     private void refresh() {
-        mMessageHandler.removeCallbacks(mCountdownRunnable);
         mRootView.removeAllViews();
-
-        final long currentTimeMillis = UIUtils.getCurrentTime(getActivity());
-
-        // Show Loading... and load the view corresponding to the current state
-        if (currentTimeMillis < UIUtils.CONFERENCE_START_MILLIS) {
-            setupBefore();
-        } else if (currentTimeMillis > UIUtils.CONFERENCE_END_MILLIS) {
-            setupAfter();
-        } else {
-            setupDuring();
-        }
 
         if (!UIUtils.isHoneycombTablet(getActivity())) {
             View separator = new View(getActivity());
@@ -101,70 +105,83 @@ public class WhatsOnFragment extends Fragment {
         }
     }
 
-    private void setupBefore() {
-        // Before conference, show countdown.
-        mCountdownTextView = (TextView) getActivity().getLayoutInflater().inflate(
-                R.layout.whats_on_countdown, mRootView, false);
-        mRootView.addView(mCountdownTextView);
-        mMessageHandler.post(mCountdownRunnable);
-    }
-
-    private void setupAfter() {
-        // After conference, show canned text.
-        getActivity().getLayoutInflater().inflate(
-                R.layout.whats_on_thank_you, mRootView, true);
-    }
-
-    private void setupDuring() {
-        // Conference in progress, show "Now Playing" link.
-        View view = getActivity().getLayoutInflater().inflate(
-                R.layout.whats_on_now_playing, mRootView, false);
-        view.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                if (UIUtils.isHoneycombTablet(getActivity())) {
-                    startActivity(new Intent(getActivity(), NowPlayingMultiPaneActivity.class));
-                } else {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(ScheduleContract.Sessions
-                            .buildSessionsAtDirUri(System.currentTimeMillis()));
-                    intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_now_playing));
-                    startActivity(intent);
-                }
-            }
-        });
-        mRootView.addView(view);
-    }
-
-    /**
-     * Event that updates countdown timer. Posts itself again to {@link #mMessageHandler} to
-     * continue updating time.
-     */
-    private Runnable mCountdownRunnable = new Runnable() {
-        public void run() {
-            int remainingSec = (int) Math.max(0,
-                    (UIUtils.CONFERENCE_START_MILLIS - System.currentTimeMillis()) / 1000);
-            final boolean conferenceStarted = remainingSec == 0;
-
-            if (conferenceStarted) {
-                // Conference started while in countdown mode, switch modes and
-                // bail on future countdown updates.
-                mMessageHandler.postDelayed(new Runnable() {
-                    public void run() {
-                        refresh();
-                    }
-                }, 100);
-                return;
-            }
-
-            final int secs = remainingSec % 86400;
-            final int days = remainingSec / 86400;
-            final String str = getResources().getQuantityString(
-                    R.plurals.whats_on_countdown_title, days, days,
-                    DateUtils.formatElapsedTime(secs));
-            mCountdownTextView.setText(str);
-
-            // Repost ourselves to keep updating countdown
-            mMessageHandler.postDelayed(mCountdownRunnable, 1000);
+	public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+		if (getActivity() == null) {
+            return;
         }
-    };
+
+        if (token == TapsQuery._TOKEN) {
+            onTapQueryComplete(cursor);
+        } else {
+        	if (cursor != null)
+        		cursor.close();
+        }
+	}
+	
+    private void onTapQueryComplete(Cursor cursor) {
+    	if (cursor.getCount() == 0)
+    		return;
+    	
+    	final LayoutInflater inflater = getActivity().getLayoutInflater();
+    	
+    	final View onTapView = inflater.inflate(R.layout.whats_on_tap, mRootView, false);
+    	final TextView onTapTitleView = (TextView) onTapView.findViewById(R.id.on_tap);
+    	final TextView onTapSubTitleView = (TextView) onTapView.findViewById(R.id.whats_on_subtitle);
+    	final ProgressBar kegProgress = (ProgressBar) onTapView.findViewById(R.id.kegProgress);
+    	final ImageView tapImage = (ImageView) onTapView.findViewById(R.id.tap_image);
+
+    	
+    	
+    	cursor.moveToFirst();
+    	final String tapImageUrl = cursor.getString(TapsQuery.IMAGE_URL);
+    	
+    	if (!TextUtils.isEmpty(tapImageUrl)) {
+            BitmapUtils.fetchImage(getActivity(), tapImageUrl, null, null,
+                    new BitmapUtils.OnFetchCompleteListener() {
+                        public void onFetchComplete(Object cookie, Bitmap result) {
+                            if (result != null) {
+                            	tapImage.setImageBitmap(result);
+                            }
+                        }
+                    });
+        }
+    	
+    	onTapTitleView.setText(cursor.getString(TapsQuery.BEER_NAME));
+    	
+    	final Double mlRemain = cursor.getDouble(TapsQuery.VOL_REMAIN);
+    	final String pintsRemain = UnitUtils.mlToPint(Double.toString(mlRemain));
+    	final Double mlTotal = cursor.getDouble(TapsQuery.VOL_SIZE);
+    	final Double mlPoured = mlTotal - mlRemain;
+    	final String pintsPoured = UnitUtils.mlToPint(Double.toString(mlPoured));
+    	
+    	
+    	onTapSubTitleView.setText("Pints Poured: " + pintsPoured + " (" + pintsRemain + " remain)");
+
+    	kegProgress.setProgressDrawable(getResources().getDrawable(R.drawable.progress));
+    	kegProgress.setProgress((int)cursor.getDouble(TapsQuery.PERCENT_FULL));
+
+    	mRootView.addView(onTapView);
+		
+	}
+
+	private interface TapsQuery {
+        int _TOKEN = 0x1;
+
+        String[] PROJECTION = {
+                KegbotContract.Taps.BEER_NAME,
+                KegbotContract.Taps.PERCENT_FULL,
+                KegbotContract.Taps.VOL_REMAIN,
+                KegbotContract.Taps.VOL_SIZE,
+                KegbotContract.Taps.LAST_TEMP,
+                KegbotContract.Taps.IMAGE_URL,
+        };
+
+        int BEER_NAME = 0;
+        int PERCENT_FULL = 1;
+        int VOL_REMAIN = 2;
+        int VOL_SIZE = 3;
+        int LAST_TEMP = 4;
+        int IMAGE_URL = 5;
+    }
 }
+

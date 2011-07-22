@@ -30,6 +30,8 @@
     <dimen name="tab_side_padding">2dp</dimen>
     <dimen name="track_icon_width">40dp</dimen>
     <dimen name="track_icon_padding">4dp</dimen>
+    <dimen name="tap_progress_width">150dp</dimen>
+   	<dimen name="tap_progress_height">12dp</dimen>
 
     <!-- body content -->
     <dimen name="body_padding_medium">10dp</dimen>
@@ -40,6 +42,7 @@
     <dimen name="text_size_xlarge">18sp</dimen>
     <dimen name="speaker_image_size">36dp</dimen>
     <dimen name="speaker_image_padding">8dp</dimen>
+    <dimen name="tap_image_size">48dp</dimen>
     <dimen name="vendor_image_size">100dp</dimen>
 
 </resources>

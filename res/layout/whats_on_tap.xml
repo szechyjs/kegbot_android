@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/body_padding_large">
+    
+    <com.goliathonline.android.kegbot.ui.widget.BezelImageView
+    	android:id="@+id/tap_image"
+        android:scaleType="centerCrop"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_width="@dimen/tap_image_size"
+        android:layout_height="@dimen/tap_image_size"
+        android:layout_marginRight="@dimen/speaker_image_padding"
+        android:src="@drawable/speaker_image_empty" />
+        
+   	<TextView android:id="@+id/on_tap"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/tap_image"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:text="On Tap"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+    
+    <TextView android:id="@+id/whats_on_subtitle"
+     	android:layout_below="@id/on_tap"
+        android:layout_toRightOf="@id/tap_image"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:textSize="10sp" />
+
+	<ProgressBar android:id="@+id/kegProgress"
+		android:layout_below="@id/whats_on_subtitle"
+		android:layout_toRightOf="@id/tap_image"
+		android:layout_width="@dimen/tap_progress_width"
+		android:layout_height="@dimen/tap_progress_height"
+		style="?android:attr/progressBarStyleHorizontal" />
+				
+</RelativeLayout>

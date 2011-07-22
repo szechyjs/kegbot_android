@@ -68,6 +68,7 @@ public class RemoteTapHandler extends JsonHandler {
         		JSONObject keg = taps.getJSONObject("keg");
         		JSONObject tap = taps.getJSONObject("tap");
         		JSONObject beer = taps.getJSONObject("beer_type");
+        		JSONObject image = beer.getJSONObject("image");
 
         		final String tapId = sanitizeId(tap.getString("id"));
                 final Uri tapUri = Taps.buildTapUri(tapId);
@@ -122,6 +123,9 @@ public class RemoteTapHandler extends JsonHandler {
                 
                 if (last_temp.has("temperature_c"))
                 	builder.withValue(Taps.LAST_TEMP, last_temp.getString("temperature_c"));
+                
+                if (image.has("url"))
+                	builder.withValue(Taps.IMAGE_URL, image.getString("url"));
                 
              // Normal tap details ready, write to provider
                 batch.add(builder.build());

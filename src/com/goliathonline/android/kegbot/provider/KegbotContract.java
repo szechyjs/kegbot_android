@@ -86,6 +86,7 @@ public class KegbotContract {
     	String BEER_NAME = "beer_name";
     	String DESCRIPTION = "description";
     	String LAST_TEMP = "last_temp";
+    	String IMAGE_URL = "image_url";
     }
 
     public static final String CONTENT_AUTHORITY = "com.goliathonline.android.kegbot";

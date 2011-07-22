@@ -201,6 +201,13 @@
         <item name="android:textColor">@color/body_text_1</item>
         <item name="android:textIsSelectable">true</item>
     </style>
+    
+    <style name="TextSmallHeader">
+    	<item name="android:textSize">@dimen/text_size_small</item>
+    	<item name="android:textStyle">bold</item>
+    	<item name="android:textColor">@color/body_text_1</item>
+    	<item name="android:textIsSelectable">true</item>
+    </style>
 
     <style name="TextBody">
         <item name="android:textSize">@dimen/text_size_small</item>
