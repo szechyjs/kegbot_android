@@ -38,8 +38,6 @@ public class RemoteUsersHandler {
     private static final String TAG = "UsersHandler";
     private Set<String> mUsers = new HashSet<String>();
     private Cursor mCursor;
-    
-    private boolean mUsersQuery = false;
 
     public RemoteUsersHandler(ContentResolver resolver) {
     	final Uri usersUri = KegbotContract.Drinks.buildUsersDirUri();
@@ -51,7 +49,6 @@ public class RemoteUsersHandler {
 			final String userId = mCursor.getString(UsersQuery.USER_ID);
 			mUsers.add(userId);
 		}
-    	mUsersQuery = true;
     	mCursor.close();
     }
     

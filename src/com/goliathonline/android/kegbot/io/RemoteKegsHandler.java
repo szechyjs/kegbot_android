@@ -20,7 +20,6 @@ import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
 import com.goliathonline.android.kegbot.service.SyncService;
 import com.goliathonline.android.kegbot.util.Lists;
-import com.goliathonline.android.kegbot.util.ParserUtils;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -76,8 +75,6 @@ public class RemoteKegsHandler extends JsonHandler {
     
     private void considerUpdate(List<String> kegIDs, Uri targetDir,
     		ContentResolver resolver) throws HandlerException {
-    	
-    	final long localUpdated = ParserUtils.queryDirUpdated(targetDir, resolver);
     	
     	String url = SyncService.WORKSHEETS_URL + "/kegs/";
     	

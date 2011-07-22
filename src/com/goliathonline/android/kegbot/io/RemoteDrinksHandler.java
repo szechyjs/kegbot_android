@@ -117,6 +117,8 @@ public class RemoteDrinksHandler extends JsonHandler {
                 	builder.withValue(Drinks.KEG_ID, drink.getInt("keg_id"));
                 if (drink.has("volume_ml"))
                 	builder.withValue(Drinks.VOLUME, drink.getDouble("volume_ml"));
+                if (drink.has("pour_time"))
+                	builder.withValue(Drinks.POUR_TIME, drink.getString("pour_time"));
                 
                 // Normal session details ready, write to provider
                 batch.add(builder.build());
@@ -165,46 +167,5 @@ public class RemoteDrinksHandler extends JsonHandler {
 
         int UPDATED = 0;
         int STARRED = 1;
-    }
-
-    /** Columns coming from remote spreadsheet. */
-    private interface Columns {
-        String SESSION_DATE = "sessiondate";
-        String SESSION_TIME = "sessiontime";
-        String SESSION_ROOM = "sessionroom";
-        String SESSION_TRACK = "sessiontrack";
-        String SESSION_LEVEL = "sessionlevel";
-        String SESSION_TITLE = "sessiontitle";
-        String SESSION_TAGS = "sessiontags";
-        String SESSION_HASHTAG = "sessionhashtag";
-        String SESSION_SLUG = "sessionslug";
-        String SESSION_SPEAKERS = "sessionspeakers";
-        String SESSION_ABSTRACT = "sessionabstract";
-        String SESSION_REQUIREMENTS = "sessionrequirements";
-        String SESSION_URL = "sessionurl";
-        String SESSION_MODERATOR_URL = "sessionmoderatorurl";
-        String SESSION_YOUTUBE_URL = "sessionyoutubeurl";
-        String SESSION_PDF_URL = "sessionpdfurl";
-        String SESSION_FEEDBACK_URL = "sessionfeedbackurl";
-        String SESSION_NOTES_URL = "sessionnotesurl";
-
-        // session_date: Wednesday May 19
-        // session_time: 10:45am-11:45am
-        // session_room: 6
-        // session_track: Enterprise, App Engine
-        // session_level: 201
-        // session_title: Run corporate applications on Google App Engine?  Yes we do.
-        // session_slug: run-corporate-applications
-        // session_tags: Enterprise, SaaS, PaaS, Hosting, App Engine, Java
-        // session_speakers: Ben Fried, John Smith
-        // session_abstract: And you can too! Come hear Google's CIO Ben Fried describe...
-        // session_requirements: None
-        // session_url: http://www.google.com/events/io/2011/foo
-        // session_hashtag: #io11android1
-        // session_youtube_url
-        // session_pdf_url
-        // session_feedback_url
-        // session_moderator_url
-        // session_notes_url
     }
 }

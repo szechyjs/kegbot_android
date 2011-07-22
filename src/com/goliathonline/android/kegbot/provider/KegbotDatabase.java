@@ -92,6 +92,7 @@ public class KegbotDatabase extends SQLiteOpenHelper {
                 + DrinksColumns.USER_ID + " TEXT,"
                 + DrinksColumns.KEG_ID + " INTEGER NOT NULL,"
                 + DrinksColumns.VOLUME + " DOUBLE NOT NULL,"
+                + DrinksColumns.POUR_TIME + " TEXT NOT NULL,"
                 + DrinksColumns.DRINK_STARRED + " INTEGER NOT NULL DEFAULT 0,"
                 + SyncColumns.UPDATED + " INTEGER,"
                 + "UNIQUE (" + DrinksColumns.DRINK_ID + ") ON CONFLICT REPLACE)");

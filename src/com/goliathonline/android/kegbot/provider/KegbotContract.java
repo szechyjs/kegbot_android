@@ -44,6 +44,7 @@ public class KegbotContract {
         String VOLUME = "volume_ml";
         String SESSION_ID = "session_id";
         String STATUS = "status";
+        String POUR_TIME = "pour_time";
         /** User-specific flag indicating starred status. */
         String DRINK_STARRED = "drink_starred";
     }
