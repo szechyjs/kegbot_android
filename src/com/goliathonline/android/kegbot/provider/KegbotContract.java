@@ -73,6 +73,20 @@ public class KegbotContract {
         String KEG_ABV = "keg_abv";
         String IMAGE_URL = "image_url";
     }
+    
+    interface TapsColumns {
+    	String TAP_ID = "tap_id";
+    	String TAP_NAME = "tap_name";
+    	String KEG_ID = "keg_id";
+    	String STATUS = "status";
+    	String PERCENT_FULL = "percent_full";
+    	String SIZE_NAME = "size_name";
+    	String VOL_REMAIN = "vol_remain";
+    	String VOL_SIZE = "vol_size";
+    	String BEER_NAME = "beer_name";
+    	String DESCRIPTION = "description";
+    	String LAST_TEMP = "last_temp";
+    }
 
     public static final String CONTENT_AUTHORITY = "com.goliathonline.android.kegbot";
 
@@ -81,6 +95,7 @@ public class KegbotContract {
     private static final String PATH_DRINKS = "drinks";
     private static final String PATH_KEGS = "kegs";
     private static final String PATH_USERS = "users";
+    private static final String PATH_TAPS = "taps";
     private static final String PATH_STARRED = "starred";
     private static final String PATH_SEARCH_SUGGEST = "search_suggest_query";
 
@@ -240,6 +255,43 @@ public class KegbotContract {
          */
         public static String generateUserId(String userLdap) {
             return ParserUtils.sanitizeId(userLdap);
+        }
+    }
+    
+    public static class Taps implements TapsColumns, BaseColumns {
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_TAPS).build();
+
+        public static final String CONTENT_TYPE =
+                "vnd.android.cursor.dir/vnd.kegbot.tap";
+        public static final String CONTENT_ITEM_TYPE =
+                "vnd.android.cursor.item/vnd.kegbot.tap";
+
+        /** Count of {@link Sessions} inside given track. */
+        public static final String TAPS_COUNT = "taps_count";
+
+        /** Default "ORDER BY" clause. */
+        public static final String DEFAULT_SORT = TapsColumns.TAP_ID + " ASC";
+
+        /** "All tracks" ID. */
+        public static final String ALL_TAP_ID = "all";
+
+        /** Build {@link Uri} for requested {@link #TAP_ID}. */
+        public static Uri buildTapUri(String tapId) {
+            return CONTENT_URI.buildUpon().appendPath(tapId).build();
+        }
+
+        /** Read {@link #TAP_ID} from {@link Taps} {@link Uri}. */
+        public static String getTapId(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        /**
+         * Generate a {@link #TAP_ID} that will always match the requested
+         * {@link Taps} details.
+         */
+        public static String generateTapId(String title) {
+            return ParserUtils.sanitizeId(title);
         }
     }
 

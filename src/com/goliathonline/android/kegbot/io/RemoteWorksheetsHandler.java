@@ -19,6 +19,7 @@ package com.goliathonline.android.kegbot.io;
 import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
+import com.goliathonline.android.kegbot.provider.KegbotContract.Taps;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Users;
 import com.goliathonline.android.kegbot.service.SyncService;
 import com.goliathonline.android.kegbot.util.Lists;
@@ -61,6 +62,7 @@ public class RemoteWorksheetsHandler extends JsonHandler {
         	// consider updating each spreadsheet based on update timestamp
         	considerUpdate(Tables.DRINKS, id, Drinks.CONTENT_URI, resolver);
         	considerUpdate(Tables.KEGS, id, Kegs.CONTENT_URI, resolver);
+        	considerUpdate(Tables.TAPS, id, Taps.CONTENT_URI, resolver);
         	updateUsers(Users.CONTENT_URI, resolver);
         }
         return Lists.newArrayList();
@@ -87,6 +89,8 @@ public class RemoteWorksheetsHandler extends JsonHandler {
         	url = url + "/drinks";
         else if (Tables.KEGS.equals(tableName))
         	url = url + "/kegs";
+        else if (Tables.TAPS.equals(tableName))
+        	url = url + "/taps";
         
         final HttpGet request = new HttpGet(url);
         final JsonHandler handler = createRemoteHandler(tableName);
@@ -99,6 +103,8 @@ public class RemoteWorksheetsHandler extends JsonHandler {
         }
         else if (Tables.KEGS.equals(tableName))
         	return new RemoteKegsHandler(mExecutor);
+        else if (Tables.TAPS.equals(tableName))
+        	return new RemoteTapHandler(mExecutor);
         else {
             throw new IllegalArgumentException("Unknown worksheet type");
         }
@@ -115,5 +121,6 @@ public class RemoteWorksheetsHandler extends JsonHandler {
         String DRINKS = "drinks";
         String USERS = "users";
         String KEGS = "kegs";
+        String TAPS = "taps";
     }
 }

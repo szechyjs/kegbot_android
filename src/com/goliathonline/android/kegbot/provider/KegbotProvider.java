@@ -18,6 +18,7 @@ package com.goliathonline.android.kegbot.provider;
 
 import com.goliathonline.android.kegbot.provider.KegbotContract.SearchSuggest;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
+import com.goliathonline.android.kegbot.provider.KegbotContract.Taps;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Users;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
 import com.goliathonline.android.kegbot.provider.KegbotDatabase.DrinksUser;
@@ -67,10 +68,12 @@ public class KegbotProvider extends ContentProvider {
     private static final int DRINKS_ID_USER = 404;
     private static final int DRINKS_ID_KEG = 405;
 
-
     private static final int USERS = 500;
     private static final int USERS_ID = 501;
     private static final int USERS_ID_DRINKS = 502;
+    
+    private static final int TAPS = 600;
+    private static final int TAPS_ID = 601;
 
     private static final int SEARCH_SUGGEST = 800;
 
@@ -98,6 +101,9 @@ public class KegbotProvider extends ContentProvider {
         matcher.addURI(authority, "users", USERS);
         matcher.addURI(authority, "users/*", USERS_ID);
         matcher.addURI(authority, "users/*/drinks", USERS_ID_DRINKS);
+        
+        matcher.addURI(authority, "taps", TAPS);
+        matcher.addURI(authority, "taps/*", TAPS_ID);
 
         matcher.addURI(authority, "search_suggest_query", SEARCH_SUGGEST);
 
@@ -140,6 +146,10 @@ public class KegbotProvider extends ContentProvider {
                 return Users.CONTENT_ITEM_TYPE;
             case USERS_ID_DRINKS:
                 return Drinks.CONTENT_TYPE;
+            case TAPS:
+            	return Taps.CONTENT_TYPE;
+            case TAPS_ID:
+            	return Taps.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -193,6 +203,11 @@ public class KegbotProvider extends ContentProvider {
                 db.insertOrThrow(Tables.USERS, null, values);
                 getContext().getContentResolver().notifyChange(uri, null);
                 return Users.buildUserUri(values.getAsString(Users.USER_ID));
+            }
+            case TAPS: {
+            	db.insertOrThrow(Tables.TAPS, null, values);
+            	getContext().getContentResolver().notifyChange(uri, null);
+            	return Taps.buildTapUri(values.getAsString(Taps.TAP_ID));
             }
             case SEARCH_SUGGEST: {
                 db.insertOrThrow(Tables.SEARCH_SUGGEST, null, values);
@@ -296,6 +311,14 @@ public class KegbotProvider extends ContentProvider {
                 return builder.table(Tables.USERS)
                         .where(Users.USER_ID + "=?", userId);
             }
+            case TAPS: {
+            	return builder.table(Tables.TAPS);
+            }
+            case TAPS_ID: {
+            	final String tapId = Taps.getTapId(uri);
+            	return builder.table(Tables.TAPS)
+            			.where(Taps.TAP_ID + "=?", tapId);
+            }
             case SEARCH_SUGGEST: {
                 return builder.table(Tables.SEARCH_SUGGEST);
             }
@@ -375,6 +398,14 @@ public class KegbotProvider extends ContentProvider {
                         .mapToTable(Drinks._ID, Tables.DRINKS)
                         .mapToTable(Drinks.SESSION_ID, Tables.DRINKS)
                         .where(Qualified.DRINKS_USERS_USER_ID + "=?", userId);
+            }
+            case TAPS: {
+            	return builder.table(Tables.TAPS);
+            }
+            case TAPS_ID: {
+            	final String tapId = Taps.getTapId(uri);
+            	return builder.table(Tables.TAPS)
+            			.where(Taps.TAP_ID + "=?", tapId);
             }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

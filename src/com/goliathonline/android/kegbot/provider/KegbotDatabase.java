@@ -5,6 +5,7 @@ import com.goliathonline.android.kegbot.provider.KegbotContract.DrinksColumns;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
 import com.goliathonline.android.kegbot.provider.KegbotContract.KegsColumns;
 import com.goliathonline.android.kegbot.provider.KegbotContract.SyncColumns;
+import com.goliathonline.android.kegbot.provider.KegbotContract.TapsColumns;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Users;
 import com.goliathonline.android.kegbot.provider.KegbotContract.UsersColumns;
 
@@ -113,6 +114,22 @@ public class KegbotDatabase extends SQLiteOpenHelper {
                 + KegsColumns.IMAGE_URL + " TEXT,"
                 + SyncColumns.UPDATED + " INTEGER,"
                 + "UNIQUE (" + KegsColumns.KEG_ID + ") ON CONFLICT REPLACE)");
+        
+        db.execSQL("CREATE TABLE " + Tables.TAPS + " ("
+        		+ BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+        		+ TapsColumns.TAP_ID + " INTEGER NOT NULL,"
+        		+ TapsColumns.TAP_NAME + " TEXT,"
+        		+ TapsColumns.KEG_ID + " INTEGER,"
+        		+ TapsColumns.STATUS + " TEXT NOT NULL,"
+        		+ TapsColumns.PERCENT_FULL + " DOUBLE,"
+        		+ TapsColumns.SIZE_NAME + " TEXT,"
+            	+ TapsColumns.VOL_REMAIN + " DOUBLE,"
+            	+ TapsColumns.VOL_SIZE + " DOUBLE,"
+        		+ TapsColumns.BEER_NAME + " TEXT,"
+        		+ TapsColumns.DESCRIPTION + " TEXT,"
+        		+ TapsColumns.LAST_TEMP + " DOUBLE,"
+        		+ SyncColumns.UPDATED + " INTEGER,"
+        		+ "UNIQUE (" + TapsColumns.TAP_ID + ") ON CONFLICT REPLACE)");
         
         db.execSQL("CREATE TABLE " + Tables.USERS + " ("
         		+ BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"

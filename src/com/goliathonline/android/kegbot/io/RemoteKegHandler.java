@@ -29,10 +29,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,13 +42,6 @@ import static com.goliathonline.android.kegbot.util.ParserUtils.sanitizeId;
 public class RemoteKegHandler extends JsonHandler {
     private static final String TAG = "KegHandler";
 
-    /**
-     * Custom format used internally that matches expected concatenation of
-     * {@link Columns#SESSION_DATE} and {@link Columns#SESSION_TIME}.
-     */
-    private static final SimpleDateFormat sTimeFormat = new SimpleDateFormat(
-            "EEEE MMM d yyyy h:mma Z", Locale.US);
-
     public RemoteKegHandler() {
         super(KegbotContract.CONTENT_AUTHORITY);
     }
@@ -63,7 +53,6 @@ public class RemoteKegHandler extends JsonHandler {
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
         // Walk document, parsing any incoming entries
-        int drink_id = 0;
         JSONObject result = parser.getJSONObject("result");
         JSONObject keg = result.getJSONObject("keg");
         JSONObject type = result.getJSONObject("type");
@@ -133,7 +122,7 @@ public class RemoteKegHandler extends JsonHandler {
         if (image.has("url"))
         	builder.withValue(Kegs.IMAGE_URL, image.getString("url"));
         
-        // Normal session details ready, write to provider
+        // Normal keg details ready, write to provider
         batch.add(builder.build());
 
         return batch;
