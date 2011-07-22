@@ -160,6 +160,7 @@ public class WhatsOnFragment extends Fragment  implements
     	kegProgress.setProgressDrawable(getResources().getDrawable(R.drawable.progress));
     	kegProgress.setProgress((int)cursor.getDouble(TapsQuery.PERCENT_FULL));
 
+    	cursor.close();
     	mRootView.addView(onTapView);
 		
 	}

@@ -103,7 +103,7 @@ public class SearchActivity extends BaseMultiPaneActivity {
     private void setupSessionsTab() {
         // TODO: this is very inefficient and messy, clean it up
         FrameLayout fragmentContainer = new FrameLayout(this);
-        fragmentContainer.setId(R.id.fragment_sessions);
+        fragmentContainer.setId(R.id.fragment_drinks);
         fragmentContainer.setLayoutParams(
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
                         ViewGroup.LayoutParams.FILL_PARENT));
@@ -115,14 +115,14 @@ public class SearchActivity extends BaseMultiPaneActivity {
             mSessionsFragment = new DrinksFragment();
             mSessionsFragment.setArguments(getSessionsFragmentArguments());
             fm.beginTransaction()
-                    .add(R.id.fragment_sessions, mSessionsFragment, "sessions")
+                    .add(R.id.fragment_drinks, mSessionsFragment, "sessions")
                     .commit();
         }
 
         // Sessions content comes from reused activity
         mTabHost.addTab(mTabHost.newTabSpec(TAG_SESSIONS)
                 .setIndicator(buildIndicator(R.string.starred_sessions))
-                .setContent(R.id.fragment_sessions));
+                .setContent(R.id.fragment_drinks));
     }
 
     /**

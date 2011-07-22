@@ -16,6 +16,7 @@
 
 package com.goliathonline.android.kegbot.ui;
 
+import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
 import com.goliathonline.android.kegbot.provider.ScheduleContract.Sessions;
 import com.goliathonline.android.kegbot.provider.ScheduleContract.Vendors;
 import com.goliathonline.android.kegbot.ui.phone.DrinkDetailActivity;
@@ -40,13 +41,13 @@ import android.widget.TextView;
  */
 public class StarredActivity extends BaseMultiPaneActivity {
 
-    public static final String TAG_SESSIONS = "sessions";
+    public static final String TAG_DRINKS = "drinks";
     public static final String TAG_VENDORS = "vendors";
 
     private TabHost mTabHost;
     private TabWidget mTabWidget;
 
-    private DrinksFragment mSessionsFragment;
+    private DrinksFragment mDrinksFragment;
     private VendorsFragment mVendorsFragment;
 
     @Override
@@ -60,7 +61,7 @@ public class StarredActivity extends BaseMultiPaneActivity {
         mTabHost.setup();
 
         setupSessionsTab();
-        setupVendorsTab();
+        //setupVendorsTab();
     }
 
     @Override
@@ -80,28 +81,28 @@ public class StarredActivity extends BaseMultiPaneActivity {
     private void setupSessionsTab() {
         // TODO: this is very inefficient and messy, clean it up
         FrameLayout fragmentContainer = new FrameLayout(this);
-        fragmentContainer.setId(R.id.fragment_sessions);
+        fragmentContainer.setId(R.id.fragment_drinks);
         fragmentContainer.setLayoutParams(
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
                         ViewGroup.LayoutParams.FILL_PARENT));
         ((ViewGroup) findViewById(android.R.id.tabcontent)).addView(fragmentContainer);
 
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Sessions.CONTENT_STARRED_URI);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, Drinks.CONTENT_STARRED_URI);
 
         final FragmentManager fm = getSupportFragmentManager();
-        mSessionsFragment = (DrinksFragment) fm.findFragmentByTag("sessions");
-        if (mSessionsFragment == null) {
-            mSessionsFragment = new DrinksFragment();
-            mSessionsFragment.setArguments(intentToFragmentArguments(intent));
+        mDrinksFragment = (DrinksFragment) fm.findFragmentByTag("drinks");
+        if (mDrinksFragment == null) {
+        	mDrinksFragment = new DrinksFragment();
+        	mDrinksFragment.setArguments(intentToFragmentArguments(intent));
             fm.beginTransaction()
-                    .add(R.id.fragment_sessions, mSessionsFragment, "sessions")
+                    .add(R.id.fragment_drinks, mDrinksFragment, "drinks")
                     .commit();
         }
 
         // Sessions content comes from reused activity
-        mTabHost.addTab(mTabHost.newTabSpec(TAG_SESSIONS)
+        mTabHost.addTab(mTabHost.newTabSpec(TAG_DRINKS)
                 .setIndicator(buildIndicator(R.string.starred_sessions))
-                .setContent(R.id.fragment_sessions));
+                .setContent(R.id.fragment_drinks));
     }
 
     /**
@@ -169,8 +170,8 @@ public class StarredActivity extends BaseMultiPaneActivity {
     }
 
     private void clearSelectedItems() {
-        if (mSessionsFragment != null) {
-            mSessionsFragment.clearCheckedPosition();
+        if (mDrinksFragment != null) {
+        	mDrinksFragment.clearCheckedPosition();
         }
         if (mVendorsFragment != null) {
             mVendorsFragment.clearCheckedPosition();

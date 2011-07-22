@@ -19,8 +19,8 @@
     <item type="id" name="actionbar_compat_logo" />
     <item type="id" name="actionbar_compat_text" />
 
-    <item type="id" name="fragment_sessions" />
-    <item type="id" name="fragment_session_detail" />
+    <item type="id" name="fragment_drinks" />
+    <item type="id" name="fragment_drink_detail" />
     <item type="id" name="fragment_vendors" />
     <item type="id" name="fragment_vendor_detail" />
 
