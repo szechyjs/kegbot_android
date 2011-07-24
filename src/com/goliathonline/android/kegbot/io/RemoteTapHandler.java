@@ -124,6 +124,9 @@ public class RemoteTapHandler extends JsonHandler {
                 if (last_temp.has("temperature_c"))
                 	builder.withValue(Taps.LAST_TEMP, last_temp.getString("temperature_c"));
                 
+                if (last_temp.has("record_time"))
+                	builder.withValue(Taps.LAST_TEMP_TIME, last_temp.getString("record_time"));
+                
                 if (image.has("url"))
                 	builder.withValue(Taps.IMAGE_URL, image.getString("url"));
                 

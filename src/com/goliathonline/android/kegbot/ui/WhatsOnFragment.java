@@ -20,7 +20,6 @@ import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.util.AnalyticsUtils;
 import com.goliathonline.android.kegbot.util.BitmapUtils;
 import com.goliathonline.android.kegbot.util.NotifyingAsyncQueryHandler;
-import com.goliathonline.android.kegbot.util.UIUtils;
 import com.goliathonline.android.kegbot.util.UnitUtils;
 import com.goliathonline.android.kegbot.R;
 
@@ -51,6 +50,7 @@ public class WhatsOnFragment extends Fragment  implements
     private ViewGroup mRootView;
     private Uri mTapUri;
     private NotifyingAsyncQueryHandler mHandler;
+    private final static String DEGREES = "\u00b0";
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class WhatsOnFragment extends Fragment  implements
     private void refresh() {
         mRootView.removeAllViews();
 
-        if (!UIUtils.isHoneycombTablet(getActivity())) {
+        if (false) { //!UIUtils.isHoneycombTablet(getActivity())
             View separator = new View(getActivity());
             separator.setLayoutParams(
                     new ViewGroup.LayoutParams(1, ViewGroup.LayoutParams.FILL_PARENT));
@@ -119,7 +119,9 @@ public class WhatsOnFragment extends Fragment  implements
 	}
 	
     private void onTapQueryComplete(Cursor cursor) {
-    	if (cursor.getCount() == 0)
+    	if (cursor == null)
+    		return;
+    	else if (cursor.getCount() == 0)
     		return;
     	
     	final LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -129,6 +131,7 @@ public class WhatsOnFragment extends Fragment  implements
     	final TextView onTapSubTitleView = (TextView) onTapView.findViewById(R.id.whats_on_subtitle);
     	final ProgressBar kegProgress = (ProgressBar) onTapView.findViewById(R.id.kegProgress);
     	final ImageView tapImage = (ImageView) onTapView.findViewById(R.id.tap_image);
+    	final TextView degreesText = (TextView) onTapView.findViewById(R.id.temperature);
 
     	
     	
@@ -153,12 +156,16 @@ public class WhatsOnFragment extends Fragment  implements
     	final Double mlTotal = cursor.getDouble(TapsQuery.VOL_SIZE);
     	final Double mlPoured = mlTotal - mlRemain;
     	final String pintsPoured = UnitUtils.mlToPint(Double.toString(mlPoured));
+    	final Double lastTemp = cursor.getDouble(TapsQuery.LAST_TEMP);
+    	final String temperature = UnitUtils.cToF(Double.toString(lastTemp));
     	
     	
     	onTapSubTitleView.setText("Pints Poured: " + pintsPoured + " (" + pintsRemain + " remain)");
 
     	kegProgress.setProgressDrawable(getResources().getDrawable(R.drawable.progress));
     	kegProgress.setProgress((int)cursor.getDouble(TapsQuery.PERCENT_FULL));
+    	
+    	degreesText.setText(temperature + DEGREES);
 
     	cursor.close();
     	mRootView.addView(onTapView);
@@ -174,6 +181,7 @@ public class WhatsOnFragment extends Fragment  implements
                 KegbotContract.Taps.VOL_REMAIN,
                 KegbotContract.Taps.VOL_SIZE,
                 KegbotContract.Taps.LAST_TEMP,
+                KegbotContract.Taps.LAST_TEMP_TIME,
                 KegbotContract.Taps.IMAGE_URL,
         };
 
@@ -182,7 +190,8 @@ public class WhatsOnFragment extends Fragment  implements
         int VOL_REMAIN = 2;
         int VOL_SIZE = 3;
         int LAST_TEMP = 4;
-        int IMAGE_URL = 5;
+        int LAST_TEMP_TIME = 5;
+        int IMAGE_URL = 6;
     }
 }
 

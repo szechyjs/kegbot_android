@@ -17,7 +17,7 @@
    	<TextView android:id="@+id/on_tap"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/tap_image"
-        android:layout_width="fill_parent"
+        android:layout_width="@dimen/tap_progress_width"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:text="On Tap"
@@ -27,7 +27,7 @@
     <TextView android:id="@+id/whats_on_subtitle"
      	android:layout_below="@id/on_tap"
         android:layout_toRightOf="@id/tap_image"
-        android:layout_width="fill_parent"
+        android:layout_width="@dimen/tap_progress_width"
         android:layout_height="wrap_content" 
         android:textSize="10sp" />
 
@@ -37,5 +37,30 @@
 		android:layout_width="@dimen/tap_progress_width"
 		android:layout_height="@dimen/tap_progress_height"
 		style="?android:attr/progressBarStyleHorizontal" />
+		
+	<ImageView android:id="@+id/thermometer"
+		android:scaleType="centerInside"
+		android:layout_toRightOf="@+id/kegProgress"
+		android:layout_height="48dp"
+		android:layout_width="15dp"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="10dp"
+		android:src="@drawable/thermometer" />
+		
+	<TextView android:id="@+id/temperature"
+        android:layout_toRightOf="@id/thermometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:textSize="14sp"
+        android:text="\u00b0" />
+        
+    <TextView android:id="@+id/temp_time"
+        android:layout_toRightOf="@id/thermometer"
+        android:layout_below="@id/temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:textSize="10sp"
+        android:text="7/23/11\n7:30pm" />
 				
 </RelativeLayout>
