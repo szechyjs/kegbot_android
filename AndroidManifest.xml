@@ -6,7 +6,7 @@
     android:installLocation="auto">
 
     <uses-sdk
-        android:minSdkVersion="7"
+        android:minSdkVersion="8"
         android:targetSdkVersion="13" />
 
     <permission
@@ -71,7 +71,7 @@
 
         <activity
             android:name=".ui.phone.KegsActivity"
-            android:label="@string/title_tracks">
+            android:label="@string/title_kegs">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -89,7 +89,7 @@
         
         <activity
             android:name=".ui.phone.DrinksActivity"
-            android:label="@string/title_sessions">
+            android:label="@string/title_drinks">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -108,7 +108,7 @@
 
         <activity
             android:name=".ui.phone.VendorsActivity"
-            android:label="@string/title_vendors">
+            android:label="@string/title_users">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -134,10 +134,10 @@
 
         <activity
             android:name=".ui.tablet.SessionsMultiPaneActivity"
-            android:label="@string/title_sessions" />
+            android:label="@string/title_drinks" />
         <activity
             android:name=".ui.tablet.VendorsMultiPaneActivity"
-            android:label="@string/title_vendors" />
+            android:label="@string/title_users" />
         <activity
             android:name=".ui.tablet.ScheduleMultiPaneActivity"
             android:label="@string/title_schedule" />

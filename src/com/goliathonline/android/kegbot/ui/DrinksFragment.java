@@ -16,6 +16,7 @@
 
 package com.goliathonline.android.kegbot.ui;
 
+import com.goliathonline.android.kegbot.io.ImageLoader;
 import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.util.BitmapUtils;
 import com.goliathonline.android.kegbot.util.NotifyingAsyncQueryHandler;
@@ -120,7 +121,7 @@ public class DrinksFragment extends ListFragment implements
         if (!mHasSetEmptyText) {
             // Could be a bug, but calling this twice makes it become visible when it shouldn't
             // be visible.
-            setEmptyText(getString(R.string.empty_sessions));
+            setEmptyText(getString(R.string.empty_drinks));
             mHasSetEmptyText = true;
         }
     }
@@ -226,8 +227,11 @@ public class DrinksFragment extends ListFragment implements
      * {@link CursorAdapter} that renders a {@link SessionsQuery}.
      */
     private class DrinksAdapter extends CursorAdapter {
+    	public ImageLoader imageLoader; 
+    	
         public DrinksAdapter(Context context) {
             super(context, null);
+            imageLoader=new ImageLoader(getActivity().getApplicationContext());
         }
 
         /** {@inheritDoc} */
@@ -277,14 +281,8 @@ public class DrinksFragment extends ListFragment implements
 	            final String userImageUrl = userCursor.getString(UserQuery.USER_IMAGE_URL);
 	            
 	            if (!TextUtils.isEmpty(userImageUrl)) {
-	                BitmapUtils.fetchImage(getActivity(), userImageUrl, null, null,
-	                        new BitmapUtils.OnFetchCompleteListener() {
-	                            public void onFetchComplete(Object cookie, Bitmap result) {
-	                                if (result != null) {
-	                                	userImgView.setImageBitmap(result);
-	                                }
-	                            }
-	                        });
+	            	
+	            	imageLoader.DisplayImage(userImageUrl, getActivity(), userImgView);
 	            }
 	            userCursor.close();
             }

@@ -175,11 +175,11 @@ public class MapMultiPaneActivity extends BaseMultiPaneActivity implements
 
     public void updateBreadCrumb() {
         final String title = (mPopupType == POPUP_TYPE_SESSIONS)
-                ? getString(R.string.title_sessions)
-                : getString(R.string.title_vendors);
+                ? getString(R.string.title_drinks)
+                : getString(R.string.title_users);
         final String detailTitle = (mPopupType == POPUP_TYPE_SESSIONS)
-                ? getString(R.string.title_session_detail)
-                : getString(R.string.title_vendor_detail);
+                ? getString(R.string.title_drink_detail)
+                : getString(R.string.title_user_detail);
 
         if (mFragmentManager.getBackStackEntryCount() >= 2) {
             mFragmentBreadCrumbs.setParentTitle(title, title, this);

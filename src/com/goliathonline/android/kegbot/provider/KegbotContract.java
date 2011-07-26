@@ -188,7 +188,7 @@ public class KegbotContract {
         public static final String DRINKS_COUNT = "drinks_count";
 
         /** Default "ORDER BY" clause. */
-        public static final String DEFAULT_SORT = KegsColumns.KEG_ID + " ASC";
+        public static final String DEFAULT_SORT = KegsColumns.KEG_ID + " DESC";
 
         /** "All tracks" ID. */
         public static final String ALL_KEG_ID = "all";

@@ -112,8 +112,8 @@ public class ScheduleMultiPaneActivity extends BaseMultiPaneActivity implements
     }
 
     public void updateBreadCrumb() {
-        final String title = getString(R.string.title_sessions);
-        final String detailTitle = getString(R.string.title_session_detail);
+        final String title = getString(R.string.title_drinks);
+        final String detailTitle = getString(R.string.title_drink_detail);
 
         if (mFragmentManager.getBackStackEntryCount() >= 1) {
             mFragmentBreadCrumbs.setParentTitle(title, title, this);

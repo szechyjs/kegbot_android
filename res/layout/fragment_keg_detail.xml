@@ -37,10 +37,19 @@
             android:clickable="false"
             android:contentDescription="@string/description_star"
             android:button="@drawable/btn_star" />
+        
+        <com.goliathonline.android.kegbot.ui.widget.BezelImageView android:id="@+id/keg_image"
+	        android:scaleType="centerCrop"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentTop="true"
+	        android:layout_width="@dimen/keg_detail_image_size"
+	        android:layout_height="@dimen/keg_detail_image_size"
+	        android:layout_marginRight="@dimen/speaker_image_padding"
+	        android:src="@drawable/speaker_image_empty" />
 
         <TextView android:id="@+id/keg_title"
             android:layout_toLeftOf="@id/star_button"
-            android:layout_alignParentLeft="true"
+            android:layout_toRightOf="@id/keg_image"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             style="@style/TextHeader" />
@@ -48,7 +57,7 @@
         <TextView android:id="@+id/keg_subtitle"
             android:layout_below="@id/keg_title"
             android:layout_toLeftOf="@id/star_button"
-            android:layout_alignParentLeft="true"
+            android:layout_toRightOf="@id/keg_image"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             style="@style/TextHeaderSub" />

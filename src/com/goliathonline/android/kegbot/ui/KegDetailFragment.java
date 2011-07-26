@@ -1,9 +1,9 @@
 package com.goliathonline.android.kegbot.ui;
 
+import com.goliathonline.android.kegbot.io.ImageLoader;
 import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.util.ActivityHelper;
 import com.goliathonline.android.kegbot.util.AnalyticsUtils;
-import com.goliathonline.android.kegbot.util.BitmapUtils;
 import com.goliathonline.android.kegbot.util.CatchNotesHelper;
 import com.goliathonline.android.kegbot.util.FractionalTouchDelegate;
 import com.goliathonline.android.kegbot.util.NotifyingAsyncQueryHandler;
@@ -17,7 +17,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -27,7 +26,6 @@ import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -57,7 +55,7 @@ public class KegDetailFragment extends Fragment implements
 
     private static final String TAG_SUMMARY = "summary";
     private static final String TAG_KEG = "keg";
-    private static final String TAG_SESSION = "session";
+    private static final String TAG_DRINKS = "drinks";
 
     private static StyleSpan sBoldSpan = new StyleSpan(Typeface.BOLD);
 
@@ -69,6 +67,7 @@ public class KegDetailFragment extends Fragment implements
     private String mUrl;
     private TextView mTagDisplay;
     private String mRoomId;
+    private ImageView kegImage;
 
     private ViewGroup mRootView;
     private TabHost mTabHost;
@@ -78,6 +77,8 @@ public class KegDetailFragment extends Fragment implements
     
     private TextView mAbstract;
     private TextView mRequirements;
+    
+    public ImageLoader imageLoader;
 
     private NotifyingAsyncQueryHandler mHandler;
 
@@ -94,6 +95,8 @@ public class KegDetailFragment extends Fragment implements
         mKegId = KegbotContract.Kegs.getKegId(mKegUri);
         
         mKegUri = resolveKegUri(intent);
+        
+        imageLoader = new ImageLoader(getActivity().getApplicationContext());
 
         if (mKegUri == null) {
             return;
@@ -147,6 +150,7 @@ public class KegDetailFragment extends Fragment implements
         mTabHost = (TabHost) mRootView.findViewById(android.R.id.tabhost);
         mTabHost.setup();
 
+        kegImage = (ImageView) mRootView.findViewById(R.id.keg_image);
         mTitle = (TextView) mRootView.findViewById(R.id.keg_title);
         mSubtitle = (TextView) mRootView.findViewById(R.id.keg_subtitle);
         mStarred = (CompoundButton) mRootView.findViewById(R.id.star_button);
@@ -255,8 +259,14 @@ public class KegDetailFragment extends Fragment implements
             // Use found keg to build title-bar
             ActivityHelper activityHelper = ((BaseActivity) getActivity()).getActivityHelper();
             activityHelper.setActionBarTitle("Keg " + cursor.getString(KegsQuery.KEG_ID));
+            
+            final String kegImageUrl = cursor.getString(KegsQuery.IMAGE_URL);
+            if (!TextUtils.isEmpty(kegImageUrl)) {
+            	
+            	imageLoader.DisplayImage(kegImageUrl, getActivity(), kegImage);
+            }
 
-            mTitleString = "Keg " + cursor.getString(KegsQuery.KEG_ID);
+            mTitleString = cursor.getString(KegsQuery.KEG_NAME);
             mTitle.setText(mTitleString);
             String desc = cursor.getString(KegsQuery.DESCRIPTION);
             mSubtitle.setText(desc);
@@ -474,7 +484,7 @@ public class KegDetailFragment extends Fragment implements
      */
     private void setupLinksTab() {
         // Summary content comes from existing layout
-        mTabHost.addTab(mTabHost.newTabSpec(TAG_SESSION)
+        mTabHost.addTab(mTabHost.newTabSpec(TAG_DRINKS)
                 .setIndicator(buildIndicator(R.string.drink_session))
                 .setContent(R.id.tab_session_links));
     }
