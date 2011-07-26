@@ -16,7 +16,7 @@
 
 package com.goliathonline.android.kegbot.ui.tablet;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Sessions;
+import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
 import com.goliathonline.android.kegbot.ui.BaseMultiPaneActivity;
 import com.goliathonline.android.kegbot.ui.DrinkDetailFragment;
 import com.goliathonline.android.kegbot.ui.DrinksFragment;
@@ -41,17 +41,17 @@ public class NowPlayingMultiPaneActivity extends BaseMultiPaneActivity {
         super.onCreate(savedInstanceState);
 
         Intent intent = new Intent();
-        intent.setData(Sessions.buildSessionsAtDirUri(System.currentTimeMillis()));
+        intent.setData(Kegs.buildDrinksUri("1")); //TODO: add kegId
 
         setContentView(R.layout.activity_now_playing);
 
         final FragmentManager fm = getSupportFragmentManager();
-        mSessionsFragment = (DrinksFragment) fm.findFragmentByTag("sessions");
+        mSessionsFragment = (DrinksFragment) fm.findFragmentByTag("drinks");
         if (mSessionsFragment == null) {
             mSessionsFragment = new DrinksFragment();
             mSessionsFragment.setArguments(intentToFragmentArguments(intent));
             fm.beginTransaction()
-                    .add(R.id.fragment_container_sessions, mSessionsFragment, "sessions")
+                    .add(R.id.fragment_container_sessions, mSessionsFragment, "drinks")
                     .commit();
         }
     }

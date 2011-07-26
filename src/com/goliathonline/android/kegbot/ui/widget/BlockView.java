@@ -16,7 +16,6 @@
 
 package com.goliathonline.android.kegbot.ui.widget;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Blocks;
 import com.goliathonline.android.kegbot.util.UIUtils;
 import com.goliathonline.android.kegbot.R;
 

@@ -16,16 +16,9 @@
 
 package com.goliathonline.android.kegbot.service;
 
-import com.goliathonline.android.kegbot.io.LocalBlocksHandler;
 import com.goliathonline.android.kegbot.io.LocalExecutor;
-import com.goliathonline.android.kegbot.io.LocalRoomsHandler;
-import com.goliathonline.android.kegbot.io.LocalSearchSuggestHandler;
-import com.goliathonline.android.kegbot.io.LocalTracksHandler;
-import com.goliathonline.android.kegbot.io.RemoteDrinksHandler;
 import com.goliathonline.android.kegbot.io.RemoteExecutor;
 import com.goliathonline.android.kegbot.io.RemoteWorksheetsHandler;
-import com.goliathonline.android.kegbot.provider.ScheduleProvider;
-import com.goliathonline.android.kegbot.R;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;

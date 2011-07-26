@@ -16,7 +16,7 @@
 
 package com.goliathonline.android.kegbot.ui.tablet;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract;
+import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.ui.BaseActivity;
 import com.goliathonline.android.kegbot.ui.DrinkDetailFragment;
 import com.goliathonline.android.kegbot.ui.TracksAdapter;
@@ -105,18 +105,14 @@ public class TracksDropdownFragment extends Fragment implements
         String selection = null;
         if (NEXT_TYPE_SESSIONS.equals(mNextType)) {
             // Only show tracks with at least one session
-            projection = TracksAdapter.TracksQuery.PROJECTION_WITH_SESSIONS_COUNT;
-            selection = ScheduleContract.Tracks.SESSIONS_COUNT + ">0";
+            projection = TracksAdapter.TracksQuery.PROJECTION_WITH_DRINKS_COUNT;
+            selection = KegbotContract.Kegs.DRINKS_COUNT + ">0";
 
-        } else if (NEXT_TYPE_VENDORS.equals(mNextType)) {
-            // Only show tracks with at least one vendor
-            projection = TracksAdapter.TracksQuery.PROJECTION_WITH_VENDORS_COUNT;
-            selection = ScheduleContract.Tracks.VENDORS_COUNT + ">0";
         }
 
         // Start background query to load tracks
         mHandler.startQuery(TracksAdapter.TracksQuery._TOKEN, null, tracksUri, projection,
-                selection, null, ScheduleContract.Tracks.DEFAULT_SORT);
+                selection, null, KegbotContract.Kegs.DEFAULT_SORT);
     }
 
     @Override
@@ -160,7 +156,7 @@ public class TracksDropdownFragment extends Fragment implements
         String lastTrackID = UIUtils.getLastUsedTrackID(getActivity());
         if (lastTrackID != null) {
             while (!cursor.isAfterLast()) {
-                if (lastTrackID.equals(cursor.getString(TracksAdapter.TracksQuery.TRACK_ID))) {
+                if (lastTrackID.equals(cursor.getString(TracksAdapter.TracksQuery.KEG_ID))) {
                     break;
                 }
                 cursor.moveToNext();
@@ -187,9 +183,9 @@ public class TracksDropdownFragment extends Fragment implements
 
         if (cursor != null) {
             UIUtils.setLastUsedTrackID(getActivity(), cursor.getString(
-                    TracksAdapter.TracksQuery.TRACK_ID));
+                    TracksAdapter.TracksQuery.KEG_ID));
         } else {
-            UIUtils.setLastUsedTrackID(getActivity(), ScheduleContract.Tracks.ALL_TRACK_ID);
+            UIUtils.setLastUsedTrackID(getActivity(), KegbotContract.Kegs.ALL_KEG_ID);
         }
 
         if (mListPopupWindow != null) {
@@ -203,15 +199,13 @@ public class TracksDropdownFragment extends Fragment implements
         final Resources res = getResources();
 
         if (cursor != null) {
-            trackColor = cursor.getInt(TracksAdapter.TracksQuery.TRACK_COLOR);
-            trackId = cursor.getString(TracksAdapter.TracksQuery.TRACK_ID);
+            trackId = cursor.getString(TracksAdapter.TracksQuery.KEG_ID);
 
-            mTitle.setText(cursor.getString(TracksAdapter.TracksQuery.TRACK_NAME));
-            mAbstract.setText(cursor.getString(TracksAdapter.TracksQuery.TRACK_ABSTRACT));
+            mTitle.setText(cursor.getString(TracksAdapter.TracksQuery.KEG_NAME));
 
         } else {
             trackColor = res.getColor(R.color.all_track_color);
-            trackId = ScheduleContract.Tracks.ALL_TRACK_ID;
+            trackId = KegbotContract.Kegs.ALL_KEG_ID;
 
             mTitle.setText(NEXT_TYPE_SESSIONS.equals(mNextType)
                     ? R.string.all_sessions_title
@@ -221,37 +215,34 @@ public class TracksDropdownFragment extends Fragment implements
                     : R.string.all_sandbox_subtitle);
         }
 
-        boolean isDark = UIUtils.isColorDark(trackColor);
-        mRootView.setBackgroundColor(trackColor);
-
-        if (isDark) {
-            mTitle.setTextColor(res.getColor(R.color.body_text_1_inverse));
-            mAbstract.setTextColor(res.getColor(R.color.body_text_2_inverse));
-            mRootView.findViewById(R.id.track_dropdown_arrow).setBackgroundResource(
-                    R.drawable.track_dropdown_arrow_light);
-        } else {
+        //if (isDark) {
+        //    mTitle.setTextColor(res.getColor(R.color.body_text_1_inverse));
+        //    mAbstract.setTextColor(res.getColor(R.color.body_text_2_inverse));
+        //    mRootView.findViewById(R.id.track_dropdown_arrow).setBackgroundResource(
+        //            R.drawable.track_dropdown_arrow_light);
+        //} else {
             mTitle.setTextColor(res.getColor(R.color.body_text_1));
             mAbstract.setTextColor(res.getColor(R.color.body_text_2));
             mRootView.findViewById(R.id.track_dropdown_arrow).setBackgroundResource(
                     R.drawable.track_dropdown_arrow_dark);
-        }
+        //}
 
         if (loadTargetFragment) {
             final Intent intent = new Intent(Intent.ACTION_VIEW);
-            final Uri trackUri = ScheduleContract.Tracks.buildTrackUri(trackId);
+            final Uri trackUri = KegbotContract.Kegs.buildKegUri(trackId);
             intent.putExtra(DrinkDetailFragment.EXTRA_TRACK, trackUri);
 
             if (NEXT_TYPE_SESSIONS.equals(mNextType)) {
                 if (cursor == null) {
-                    intent.setData(ScheduleContract.Sessions.CONTENT_URI);
+                    intent.setData(KegbotContract.Drinks.CONTENT_URI);
                 } else {
-                    intent.setData(ScheduleContract.Tracks.buildSessionsUri(trackId));
+                    intent.setData(KegbotContract.Kegs.buildDrinksUri(trackId));
                 }
             } else if (NEXT_TYPE_VENDORS.equals(mNextType)) {
                 if (cursor == null) {
-                    intent.setData(ScheduleContract.Vendors.CONTENT_URI);
+                    intent.setData(KegbotContract.Users.CONTENT_URI);
                 } else {
-                    intent.setData(ScheduleContract.Tracks.buildVendorsUri(trackId));
+                    intent.setData(KegbotContract.Kegs.buildKegUri(trackId));
                 }
             }
 

@@ -17,7 +17,6 @@
 package com.goliathonline.android.kegbot.ui;
 
 import com.goliathonline.android.kegbot.provider.KegbotContract;
-import com.goliathonline.android.kegbot.provider.ScheduleContract;
 import com.goliathonline.android.kegbot.ui.tablet.ScheduleMultiPaneActivity;
 import com.goliathonline.android.kegbot.ui.tablet.SessionsMultiPaneActivity;
 import com.goliathonline.android.kegbot.ui.tablet.VendorsMultiPaneActivity;
@@ -97,7 +96,7 @@ public class DashboardFragment extends Fragment {
                     startActivity(new Intent(getActivity(), VendorsMultiPaneActivity.class));
                 } else {
                     final Intent intent = new Intent(Intent.ACTION_VIEW,
-                            ScheduleContract.Tracks.CONTENT_URI);
+                            KegbotContract.Users.CONTENT_URI);
                     //intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_vendor_tracks));
                     //intent.putExtra(TracksFragment.EXTRA_NEXT_TYPE,
                     //        TracksFragment.NEXT_TYPE_VENDORS);

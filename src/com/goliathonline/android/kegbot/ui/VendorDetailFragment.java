@@ -16,17 +16,14 @@
 
 package com.goliathonline.android.kegbot.ui;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract;
+import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.util.ActivityHelper;
 import com.goliathonline.android.kegbot.util.AnalyticsUtils;
 import com.goliathonline.android.kegbot.util.BitmapUtils;
 import com.goliathonline.android.kegbot.util.FractionalTouchDelegate;
 import com.goliathonline.android.kegbot.util.NotifyingAsyncQueryHandler;
-import com.goliathonline.android.kegbot.util.ParserUtils;
-import com.goliathonline.android.kegbot.util.UIUtils;
 import com.goliathonline.android.kegbot.R;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -52,11 +49,7 @@ import android.widget.TextView;
 public class VendorDetailFragment extends Fragment implements
         NotifyingAsyncQueryHandler.AsyncQueryListener,
         CompoundButton.OnCheckedChangeListener {
-    private static final String TAG = "VendorDetailFragment";
-
     private Uri mVendorUri;
-
-    private String mTrackId;
 
     private ViewGroup mRootView;
     private TextView mName;
@@ -94,7 +87,7 @@ public class VendorDetailFragment extends Fragment implements
 
         // Start background query to load vendor details
         mHandler = new NotifyingAsyncQueryHandler(getActivity().getContentResolver(), this);
-        mHandler.startQuery(mVendorUri, VendorsQuery.PROJECTION);
+        mHandler.startQuery(mVendorUri, UsersQuery.PROJECTION);
     }
 
     @Override
@@ -148,17 +141,11 @@ public class VendorDetailFragment extends Fragment implements
                 return;
             }
 
-            mNameString = cursor.getString(VendorsQuery.NAME);
+            mNameString = cursor.getString(UsersQuery.NAME);
             mName.setText(mNameString);
 
-            // Unregister around setting checked state to avoid triggering
-            // listener since change isn't user generated.
-            mStarred.setOnCheckedChangeListener(null);
-            mStarred.setChecked(cursor.getInt(VendorsQuery.STARRED) != 0);
-            mStarred.setOnCheckedChangeListener(this);
-
             // Start background fetch to load vendor logo
-            final String logoUrl = cursor.getString(VendorsQuery.LOGO_URL);
+            final String logoUrl = cursor.getString(UsersQuery.IMAGE_URL);
 
             if (!TextUtils.isEmpty(logoUrl)) {
                 BitmapUtils.fetchImage(getActivity(), logoUrl, null, null,
@@ -174,20 +161,15 @@ public class VendorDetailFragment extends Fragment implements
                         });
             }
 
-            mUrl.setText(cursor.getString(VendorsQuery.URL));
-            mDesc.setText(cursor.getString(VendorsQuery.DESC));
-            mProductDesc.setText(cursor.getString(VendorsQuery.PRODUCT_DESC));
 
-            mTrackId = cursor.getString(VendorsQuery.TRACK_ID);
 
             // Assign track details when found
             // TODO: handle vendors not attached to track
             ActivityHelper activityHelper = ((BaseActivity) getActivity()).getActivityHelper();
-            activityHelper.setActionBarTitle(cursor.getString(VendorsQuery.TRACK_NAME));
-            activityHelper.setActionBarColor(cursor.getInt(VendorsQuery.TRACK_COLOR));
+            activityHelper.setActionBarTitle(cursor.getString(UsersQuery.NAME));
 
             AnalyticsUtils.getInstance(getActivity()).trackPageView(
-                    "/Sandbox/Vendors/" + mNameString);
+                    "/Users/" + mNameString);
 
         } finally {
             cursor.close();
@@ -198,12 +180,7 @@ public class VendorDetailFragment extends Fragment implements
      * Handle toggling of starred checkbox.
      */
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        final ContentValues values = new ContentValues();
-        values.put(ScheduleContract.Vendors.VENDOR_STARRED, isChecked ? 1 : 0);
-        mHandler.startUpdate(mVendorUri, values);
 
-        AnalyticsUtils.getInstance(getActivity()).trackEvent(
-                "Sandbox", isChecked ? "Starred" : "Unstarred", mNameString, 0);
     }
 
     @Override
@@ -214,44 +191,21 @@ public class VendorDetailFragment extends Fragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_map) {
-            // The room ID for the sandbox, in the map, is just the track ID
-            final Intent intent = new Intent(getActivity().getApplicationContext(),
-                    UIUtils.getMapActivityClass(getActivity()));
-            intent.putExtra(MapFragment.EXTRA_ROOM,
-                    ParserUtils.translateTrackIdAliasInverse(mTrackId));
-            startActivity(intent);
-            return true;
-        }
+
         return super.onOptionsItemSelected(item);
     }
 
     /**
      * {@link com.goliathonline.android.kegbot.provider.ScheduleContract.Vendors} query parameters.
      */
-    private interface VendorsQuery {
+    private interface UsersQuery {
         String[] PROJECTION = {
-                ScheduleContract.Vendors.VENDOR_NAME,
-                ScheduleContract.Vendors.VENDOR_LOCATION,
-                ScheduleContract.Vendors.VENDOR_DESC,
-                ScheduleContract.Vendors.VENDOR_URL,
-                ScheduleContract.Vendors.VENDOR_PRODUCT_DESC,
-                ScheduleContract.Vendors.VENDOR_LOGO_URL,
-                ScheduleContract.Vendors.VENDOR_STARRED,
-                ScheduleContract.Vendors.TRACK_ID,
-                ScheduleContract.Tracks.TRACK_NAME,
-                ScheduleContract.Tracks.TRACK_COLOR,
+        		KegbotContract.Users.USER_ID,
+        		KegbotContract.Users.USER_NAME,
+        		KegbotContract.Users.USER_IMAGE_URL,
         };
 
-        int NAME = 0;
-        int LOCATION = 1;
-        int DESC = 2;
-        int URL = 3;
-        int PRODUCT_DESC = 4;
-        int LOGO_URL = 5;
-        int STARRED = 6;
-        int TRACK_ID = 7;
-        int TRACK_NAME = 8;
-        int TRACK_COLOR = 9;
+        int NAME = 1;
+        int IMAGE_URL = 2;
     }
 }

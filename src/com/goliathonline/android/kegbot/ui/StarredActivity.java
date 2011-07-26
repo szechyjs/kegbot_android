@@ -18,8 +18,6 @@ package com.goliathonline.android.kegbot.ui;
 
 import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
 import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Sessions;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Vendors;
 import com.goliathonline.android.kegbot.ui.phone.DrinkDetailActivity;
 import com.goliathonline.android.kegbot.ui.phone.VendorDetailActivity;
 import com.goliathonline.android.kegbot.R;

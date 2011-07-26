@@ -16,10 +16,6 @@
 
 package com.goliathonline.android.kegbot.util;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Blocks;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Rooms;
-import com.goliathonline.android.kegbot.ui.phone.MapActivity;
-import com.goliathonline.android.kegbot.ui.tablet.MapMultiPaneActivity;
 import com.goliathonline.android.kegbot.R;
 
 import android.content.Context;
@@ -205,13 +201,5 @@ public class UIUtils {
             return infos.get(0).loadIcon(pm);
         }
         return null;
-    }
-
-    public static Class getMapActivityClass(Context context) {
-        if (UIUtils.isHoneycombTablet(context)) {
-            return MapMultiPaneActivity.class;
-        }
-
-        return MapActivity.class;
     }
 }

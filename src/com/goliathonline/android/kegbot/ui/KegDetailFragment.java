@@ -353,13 +353,6 @@ public class KegDetailFragment extends Fragment implements
         final Intent intent;
 
         switch (item.getItemId()) {
-            case R.id.menu_map:
-                intent = new Intent(getActivity().getApplicationContext(),
-                        UIUtils.getMapActivityClass(getActivity()));
-                intent.putExtra(MapFragment.EXTRA_ROOM, mRoomId);
-                startActivity(intent);
-                return true;
-
             case R.id.menu_share:
                 // TODO: consider bringing in shortlink to session
                 shareString = getString(R.string.share_template, mTitleString, getHashtagsString(),

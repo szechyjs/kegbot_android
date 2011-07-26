@@ -52,22 +52,7 @@
             android:name=".ui.StarredActivity"
             android:label="@string/title_starred" />
 
-        <activity
-            android:name=".ui.SearchActivity"
-            android:label="@string/title_search"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
-        </activity>
-
         <!-- Phone-only activities -->
-
-        <activity
-            android:name=".ui.phone.ScheduleActivity"
-            android:label="@string/title_schedule" />
 
         <activity
             android:name=".ui.phone.KegsActivity"
@@ -125,11 +110,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.phone.MapActivity"
-            android:label="@string/title_map"
-            android:configChanges="orientation|keyboardHidden" />
-
         <!-- Tablet-only activities -->
 
         <activity
@@ -141,10 +121,6 @@
         <activity
             android:name=".ui.tablet.ScheduleMultiPaneActivity"
             android:label="@string/title_schedule" />
-        <activity
-            android:name=".ui.tablet.MapMultiPaneActivity"
-            android:label="@string/title_map"
-            android:configChanges="orientation|keyboardHidden" />
         <activity
             android:name="com.goliathonline.android.kegbot.ui.tablet.NowPlayingMultiPaneActivity"
             android:label="@string/title_now_playing" />

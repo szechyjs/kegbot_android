@@ -16,7 +16,7 @@
 
 package com.goliathonline.android.kegbot.ui;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract;
+import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.util.ActivityHelper;
 import com.goliathonline.android.kegbot.util.AnalyticsUtils;
 import com.goliathonline.android.kegbot.util.NotifyingAsyncQueryHandler;
@@ -31,15 +31,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
-import android.text.Spannable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import static com.goliathonline.android.kegbot.util.UIUtils.buildStyledSnippet;
 
 /**
  * A {@link ListFragment} showing a list of sandbox comapnies.
@@ -74,7 +70,6 @@ public class VendorsFragment extends ListFragment implements
         mCheckedPosition = -1;
         setListAdapter(null);
 
-        mHandler.cancelOperation(SearchQuery._TOKEN);
         mHandler.cancelOperation(VendorsQuery._TOKEN);
 
         // Load new arguments
@@ -87,23 +82,16 @@ public class VendorsFragment extends ListFragment implements
         }
 
         String[] projection;
-        if (!ScheduleContract.Vendors.isSearchUri(vendorsUri)) {
-            mAdapter = new VendorsAdapter(getActivity());
-            projection = VendorsQuery.PROJECTION;
-            vendorQueryToken = VendorsQuery._TOKEN;
+        mAdapter = new VendorsAdapter(getActivity());
+        projection = VendorsQuery.PROJECTION;
+        vendorQueryToken = VendorsQuery._TOKEN;
 
-        } else {
-            Log.d("VendorsFragment/reloadFromArguments", "A search URL definitely gets passed in.");
-            mAdapter = new SearchAdapter(getActivity());
-            projection = SearchQuery.PROJECTION;
-            vendorQueryToken = SearchQuery._TOKEN;
-        }
 
         setListAdapter(mAdapter);
 
         // Start background query to load vendors
         mHandler.startQuery(vendorQueryToken, null, vendorsUri, projection, null, null,
-                ScheduleContract.Vendors.DEFAULT_SORT);
+        		KegbotContract.Users.DEFAULT_SORT);
 
         // If caller launched us with specific track hint, pass it along when
         // launching vendor details. Also start a query to load the track info.
@@ -137,7 +125,7 @@ public class VendorsFragment extends ListFragment implements
             return;
         }
 
-        if (token == VendorsQuery._TOKEN || token == SearchQuery._TOKEN) {
+        if (token == VendorsQuery._TOKEN) {
             onVendorsOrSearchQueryComplete(cursor);
         } else if (token == TracksQuery._TOKEN) {
             onTrackQueryComplete(cursor);
@@ -185,7 +173,7 @@ public class VendorsFragment extends ListFragment implements
     public void onResume() {
         super.onResume();
         getActivity().getContentResolver().registerContentObserver(
-                ScheduleContract.Vendors.CONTENT_URI, true, mVendorChangesObserver);
+        		KegbotContract.Users.CONTENT_URI, true, mVendorChangesObserver);
         if (mCursor != null) {
             mCursor.requery();
         }
@@ -209,7 +197,7 @@ public class VendorsFragment extends ListFragment implements
         // Launch viewer for specific vendor.
         final Cursor cursor = (Cursor)mAdapter.getItem(position);
         final String vendorId = cursor.getString(VendorsQuery.VENDOR_ID);
-        final Uri vendorUri = ScheduleContract.Vendors.buildVendorUri(vendorId);
+        final Uri vendorUri = KegbotContract.Users.buildUserUri(vendorId);
         ((BaseActivity) getActivity()).openActivityOrFragment(new Intent(Intent.ACTION_VIEW,
                 vendorUri));
 
@@ -244,41 +232,6 @@ public class VendorsFragment extends ListFragment implements
         public void bindView(View view, Context context, Cursor cursor) {
             ((TextView) view.findViewById(R.id.vendor_name)).setText(
                     cursor.getString(VendorsQuery.NAME));
-
-            final boolean starred = cursor.getInt(VendorsQuery.STARRED) != 0;
-            view.findViewById(R.id.star_button).setVisibility(
-                    starred ? View.VISIBLE : View.INVISIBLE);
-        }
-    }
-
-    /**
-     * {@link CursorAdapter} that renders a {@link SearchQuery}.
-     */
-    private class SearchAdapter extends CursorAdapter {
-        public SearchAdapter(Context context) {
-            super(context, null);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            return getActivity().getLayoutInflater().inflate(R.layout.list_item_vendor, parent,
-                    false);
-        }
-
-        /** {@inheritDoc} */ 
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            ((TextView) view.findViewById(R.id.vendor_name)).setText(cursor
-                    .getString(SearchQuery.NAME));
-
-            final String snippet = cursor.getString(SearchQuery.SEARCH_SNIPPET);
-            final Spannable styledSnippet = buildStyledSnippet(snippet);
-            ((TextView) view.findViewById(R.id.vendor_location)).setText(styledSnippet);
-
-            final boolean starred = cursor.getInt(VendorsQuery.STARRED) != 0;
-            view.findViewById(R.id.star_button).setVisibility(
-                    starred ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
@@ -299,17 +252,13 @@ public class VendorsFragment extends ListFragment implements
 
         String[] PROJECTION = {
                 BaseColumns._ID,
-                ScheduleContract.Vendors.VENDOR_ID,
-                ScheduleContract.Vendors.VENDOR_NAME,
-                ScheduleContract.Vendors.VENDOR_LOCATION,
-                ScheduleContract.Vendors.VENDOR_STARRED,
+                KegbotContract.Users.USER_ID,
+                KegbotContract.Users.USER_NAME,
         };
 
         int _ID = 0;
         int VENDOR_ID = 1;
         int NAME = 2;
-        int LOCATION = 3;
-        int STARRED = 4;
     }
 
     /**
@@ -319,31 +268,10 @@ public class VendorsFragment extends ListFragment implements
         int _TOKEN = 0x2;
 
         String[] PROJECTION = {
-                ScheduleContract.Tracks.TRACK_NAME,
-                ScheduleContract.Tracks.TRACK_COLOR,
+        		KegbotContract.Kegs.KEG_NAME,
         };
 
         int TRACK_NAME = 0;
         int TRACK_COLOR = 1;
-    }
-
-    /** {@link com.goliathonline.android.kegbot.provider.ScheduleContract.Vendors} search query
-     * parameters. */
-    private interface SearchQuery {
-        int _TOKEN = 0x3;
-
-        String[] PROJECTION = {
-                BaseColumns._ID,
-                ScheduleContract.Vendors.VENDOR_ID,
-                ScheduleContract.Vendors.VENDOR_NAME,
-                ScheduleContract.Vendors.SEARCH_SNIPPET,
-                ScheduleContract.Vendors.VENDOR_STARRED,
-        };
-
-        int _ID = 0;
-        int VENDOR_ID = 1;
-        int NAME = 2;
-        int SEARCH_SNIPPET = 3;
-        int STARRED = 4;
     }
 }

@@ -17,17 +17,14 @@
 package com.goliathonline.android.kegbot.util;
 
 import com.goliathonline.android.kegbot.io.XmlHandler;
-import com.goliathonline.android.kegbot.provider.ScheduleContract;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Blocks;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.SyncColumns;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Tracks;
+import com.goliathonline.android.kegbot.provider.KegbotContract;
+import com.goliathonline.android.kegbot.provider.KegbotContract.SyncColumns;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.ContentProvider;
-import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -37,7 +34,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -122,35 +118,6 @@ public class ParserUtils {
     }
 
     /**
-     * Return a {@link Blocks#BLOCK_ID} matching the requested arguments.
-     */
-    public static String findBlock(String title, long startTime, long endTime) {
-        // TODO: in future we might check provider if block exists
-        return Blocks.generateBlockId(startTime, endTime);
-    }
-
-    /**
-     * Return a {@link Blocks#BLOCK_ID} matching the requested arguments,
-     * inserting a new {@link Blocks} entry as a
-     * {@link ContentProviderOperation} when none already exists.
-     */
-    public static String findOrCreateBlock(String title, String type, long startTime, long endTime,
-            ArrayList<ContentProviderOperation> batch, ContentResolver resolver) {
-        // TODO: check for existence instead of always blindly creating. it's
-        // okay for now since the database replaces on conflict.
-        final ContentProviderOperation.Builder builder = ContentProviderOperation
-                .newInsert(Blocks.CONTENT_URI);
-        final String blockId = Blocks.generateBlockId(startTime, endTime);
-        builder.withValue(Blocks.BLOCK_ID, blockId);
-        builder.withValue(Blocks.BLOCK_TITLE, title);
-        builder.withValue(Blocks.BLOCK_START, startTime);
-        builder.withValue(Blocks.BLOCK_END, endTime);
-        builder.withValue(Blocks.BLOCK_TYPE, type);
-        batch.add(builder.build());
-        return blockId;
-    }
-
-    /**
      * Query and return the {@link SyncColumns#UPDATED} time for the requested
      * {@link Uri}. Expects the {@link Uri} to reference a single item.
      */
@@ -161,7 +128,7 @@ public class ParserUtils {
             if (cursor.moveToFirst()) {
                 return cursor.getLong(0);
             } else {
-                return ScheduleContract.UPDATED_NEVER;
+                return KegbotContract.UPDATED_NEVER;
             }
         } finally {
             cursor.close();

@@ -16,18 +16,16 @@
 
 package com.goliathonline.android.kegbot.ui;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract;
+import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.provider.BaseColumns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -130,11 +128,8 @@ public class TracksAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         final TextView textView = (TextView) view.findViewById(android.R.id.text1);
-        textView.setText(cursor.getString(TracksQuery.TRACK_NAME));
+        textView.setText(cursor.getString(TracksQuery.KEG_NAME));
 
-        // Assign track color to visible block
-        final ImageView iconView = (ImageView) view.findViewById(android.R.id.icon1);
-        iconView.setImageDrawable(new ColorDrawable(cursor.getInt(TracksQuery.TRACK_COLOR)));
     }
 
     /** {@link com.goliathonline.android.kegbot.provider.ScheduleContract.Tracks} query parameters. */
@@ -143,34 +138,19 @@ public class TracksAdapter extends CursorAdapter {
 
         String[] PROJECTION = {
                 BaseColumns._ID,
-                ScheduleContract.Tracks.TRACK_ID,
-                ScheduleContract.Tracks.TRACK_NAME,
-                ScheduleContract.Tracks.TRACK_ABSTRACT,
-                ScheduleContract.Tracks.TRACK_COLOR,
+                KegbotContract.Kegs.KEG_ID,
+                KegbotContract.Kegs.KEG_NAME,
         };
 
-        String[] PROJECTION_WITH_SESSIONS_COUNT = {
+        String[] PROJECTION_WITH_DRINKS_COUNT = {
                 BaseColumns._ID,
-                ScheduleContract.Tracks.TRACK_ID,
-                ScheduleContract.Tracks.TRACK_NAME,
-                ScheduleContract.Tracks.TRACK_ABSTRACT,
-                ScheduleContract.Tracks.TRACK_COLOR,
-                ScheduleContract.Tracks.SESSIONS_COUNT,
-        };
-
-        String[] PROJECTION_WITH_VENDORS_COUNT = {
-                BaseColumns._ID,
-                ScheduleContract.Tracks.TRACK_ID,
-                ScheduleContract.Tracks.TRACK_NAME,
-                ScheduleContract.Tracks.TRACK_ABSTRACT,
-                ScheduleContract.Tracks.TRACK_COLOR,
-                ScheduleContract.Tracks.VENDORS_COUNT,
+                KegbotContract.Kegs.KEG_ID,
+                KegbotContract.Kegs.KEG_NAME,
+                KegbotContract.Kegs.DRINKS_COUNT,
         };
 
         int _ID = 0;
-        int TRACK_ID = 1;
-        int TRACK_NAME = 2;
-        int TRACK_ABSTRACT = 3;
-        int TRACK_COLOR = 4;
+        int KEG_ID = 1;
+        int KEG_NAME = 2;
     }
 }

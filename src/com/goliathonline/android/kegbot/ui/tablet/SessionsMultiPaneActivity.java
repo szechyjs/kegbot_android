@@ -16,7 +16,7 @@
 
 package com.goliathonline.android.kegbot.ui.tablet;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract;
+import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.ui.BaseMultiPaneActivity;
 import com.goliathonline.android.kegbot.ui.DrinkDetailFragment;
 import com.goliathonline.android.kegbot.ui.DrinksFragment;
@@ -46,7 +46,7 @@ public class SessionsMultiPaneActivity extends BaseMultiPaneActivity {
         setContentView(R.layout.activity_sessions);
 
         Intent intent = new Intent();
-        intent.setData(ScheduleContract.Tracks.CONTENT_URI);
+        intent.setData(KegbotContract.Kegs.CONTENT_URI);
         //intent.putExtra(TracksFragment.EXTRA_NEXT_TYPE, TracksFragment.NEXT_TYPE_SESSIONS);
 
         final FragmentManager fm = getSupportFragmentManager();

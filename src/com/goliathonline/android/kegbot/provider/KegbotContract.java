@@ -1,7 +1,5 @@
 package com.goliathonline.android.kegbot.provider;
 
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Speakers;
-import com.goliathonline.android.kegbot.provider.ScheduleContract.Tracks;
 import com.goliathonline.android.kegbot.util.ParserUtils;
 
 import android.app.SearchManager;
@@ -184,7 +182,7 @@ public class KegbotContract {
         public static final String CONTENT_ITEM_TYPE =
                 "vnd.android.cursor.item/vnd.kegbot.keg";
 
-        /** Count of {@link Sessions} inside given track. */
+        /** Count of {@link Drinks} inside given keg. */
         public static final String DRINKS_COUNT = "drinks_count";
 
         /** Default "ORDER BY" clause. */
