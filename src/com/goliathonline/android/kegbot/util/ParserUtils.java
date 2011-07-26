@@ -16,7 +16,6 @@
 
 package com.goliathonline.android.kegbot.util;
 
-import com.goliathonline.android.kegbot.io.XmlHandler;
 import com.goliathonline.android.kegbot.provider.KegbotContract;
 import com.goliathonline.android.kegbot.provider.KegbotContract.SyncColumns;
 

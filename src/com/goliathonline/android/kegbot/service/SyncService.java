@@ -18,7 +18,7 @@ package com.goliathonline.android.kegbot.service;
 
 import com.goliathonline.android.kegbot.io.LocalExecutor;
 import com.goliathonline.android.kegbot.io.RemoteExecutor;
-import com.goliathonline.android.kegbot.io.RemoteWorksheetsHandler;
+import com.goliathonline.android.kegbot.io.RemoteJsonHandler;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -136,7 +136,7 @@ public class SyncService extends IntentService {
             // Always hit remote spreadsheet for any updates
             final long startRemote = System.currentTimeMillis();
             mRemoteExecutor
-                    .executeGet(WORKSHEETS_URL + "/events", new RemoteWorksheetsHandler(mRemoteExecutor));
+                    .executeGet(WORKSHEETS_URL + "/events", new RemoteJsonHandler(mRemoteExecutor));
             Log.d(TAG, "remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
 
         } catch (Exception e) {

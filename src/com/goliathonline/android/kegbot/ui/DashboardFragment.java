@@ -17,7 +17,6 @@
 package com.goliathonline.android.kegbot.ui;
 
 import com.goliathonline.android.kegbot.provider.KegbotContract;
-import com.goliathonline.android.kegbot.ui.tablet.ScheduleMultiPaneActivity;
 import com.goliathonline.android.kegbot.ui.tablet.SessionsMultiPaneActivity;
 import com.goliathonline.android.kegbot.ui.tablet.VendorsMultiPaneActivity;
 import com.goliathonline.android.kegbot.util.AnalyticsUtils;
@@ -48,7 +47,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Drinks");
                 if (UIUtils.isHoneycombTablet(getActivity())) {
-                    startActivity(new Intent(getActivity(), ScheduleMultiPaneActivity.class));
+                    startActivity(new Intent(getActivity(), SessionsMultiPaneActivity.class));
                 } else {
                 	final Intent intent = new Intent(Intent.ACTION_VIEW,
                 			KegbotContract.Drinks.CONTENT_URI);
@@ -109,7 +108,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 fireTrackerEvent("Kegs");
                 if (UIUtils.isHoneycombTablet(getActivity())) {
-                    startActivity(new Intent(getActivity(), ScheduleMultiPaneActivity.class));
+                    startActivity(new Intent(getActivity(), SessionsMultiPaneActivity.class));
                 } else {
                 	final Intent intent = new Intent(Intent.ACTION_VIEW,
                 			KegbotContract.Kegs.CONTENT_URI);
