@@ -485,7 +485,7 @@ public class KegDetailFragment extends Fragment implements
     private void setupLinksTab() {
         // Summary content comes from existing layout
         mTabHost.addTab(mTabHost.newTabSpec(TAG_DRINKS)
-                .setIndicator(buildIndicator(R.string.drink_session))
+                .setIndicator(buildIndicator(R.string.keg_drinks))
                 .setContent(R.id.tab_session_links));
     }
 

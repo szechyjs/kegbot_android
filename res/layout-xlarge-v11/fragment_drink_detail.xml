@@ -18,7 +18,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <RelativeLayout android:id="@+id/header_session"
+    <RelativeLayout android:id="@+id/header_drink"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/thickbar_height"
         android:paddingLeft="@dimen/body_padding_large"
@@ -35,15 +35,15 @@
             android:contentDescription="@string/description_star"
             android:button="@drawable/btn_star" />
 
-        <TextView android:id="@+id/session_title"
+        <TextView android:id="@+id/drink_title"
             android:layout_toLeftOf="@id/star_button"
             android:layout_alignParentLeft="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             style="@style/TextHeader" />
 
-        <TextView android:id="@+id/session_subtitle"
-            android:layout_below="@id/session_title"
+        <TextView android:id="@+id/drink_subtitle"
+            android:layout_below="@id/drink_title"
             android:layout_toLeftOf="@id/star_button"
             android:layout_alignParentLeft="true"
             android:layout_width="fill_parent"
@@ -72,10 +72,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
-                <include android:id="@+id/tab_session_summary"
-                    layout="@layout/tab_session_summary" />
-                <include android:id="@+id/tab_session_notes" layout="@layout/tab_session_notes" />
-                <include android:id="@+id/tab_session_links" layout="@layout/tab_session_links" />
+                <include android:id="@+id/tab_drink_summary" layout="@layout/tab_drink_summary" />
+                <include android:id="@+id/tab_drink_keg" layout="@layout/tab_drink_keg" />
+                <include android:id="@+id/tab_drink_session" layout="@layout/tab_drink_session" />
             </FrameLayout>
         </LinearLayout>
     </TabHost>
