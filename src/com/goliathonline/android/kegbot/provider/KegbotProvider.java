@@ -58,8 +58,9 @@ public class KegbotProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
     private static final int KEGS = 200;
-    private static final int KEGS_ID = 201;
-    private static final int KEGS_ID_DRINKS = 202;
+    private static final int KEGS_STARRED = 201;
+    private static final int KEGS_ID = 202;
+    private static final int KEGS_ID_DRINKS = 203;
 
     private static final int DRINKS = 400;
     private static final int DRINKS_STARRED = 401;
@@ -88,6 +89,7 @@ public class KegbotProvider extends ContentProvider {
         final String authority = KegbotContract.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, "kegs", KEGS);
+        matcher.addURI(authority, "kegs/starred", KEGS_STARRED);
         matcher.addURI(authority, "kegs/*", KEGS_ID);
         matcher.addURI(authority, "kegs/*/drinks", KEGS_ID_DRINKS);
 
@@ -124,6 +126,8 @@ public class KegbotProvider extends ContentProvider {
         switch (match) {
             case KEGS:
                 return Kegs.CONTENT_TYPE;
+            case KEGS_STARRED:
+            	return Kegs.CONTENT_TYPE;
             case KEGS_ID:
                 return Kegs.CONTENT_ITEM_TYPE;
             case KEGS_ID_DRINKS:
@@ -339,6 +343,11 @@ public class KegbotProvider extends ContentProvider {
             case KEGS: {
                 return builder.table(Tables.KEGS)
                         .map(Kegs.DRINKS_COUNT, Subquery.KEG_DRINKS_COUNT);
+            }
+            case KEGS_STARRED: {
+            	return builder.table(Tables.KEGS)
+            			.mapToTable(Kegs._ID, Tables.KEGS)
+            			.where(Kegs.KEG_STARRED + "=1");
             }
             case KEGS_ID: {
                 final String kegId = Kegs.getKegId(uri);

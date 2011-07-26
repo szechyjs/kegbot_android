@@ -121,7 +121,7 @@ public class SearchActivity extends BaseMultiPaneActivity {
 
         // Sessions content comes from reused activity
         mTabHost.addTab(mTabHost.newTabSpec(TAG_SESSIONS)
-                .setIndicator(buildIndicator(R.string.starred_sessions))
+                .setIndicator(buildIndicator(R.string.starred_drinks))
                 .setContent(R.id.fragment_drinks));
     }
 
@@ -131,7 +131,7 @@ public class SearchActivity extends BaseMultiPaneActivity {
     private void setupVendorsTab() {
         // TODO: this is very inefficient and messy, clean it up
         FrameLayout fragmentContainer = new FrameLayout(this);
-        fragmentContainer.setId(R.id.fragment_vendors);
+        fragmentContainer.setId(R.id.fragment_kegs);
         fragmentContainer.setLayoutParams(
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
                         ViewGroup.LayoutParams.FILL_PARENT));
@@ -143,14 +143,14 @@ public class SearchActivity extends BaseMultiPaneActivity {
             mVendorsFragment = new VendorsFragment();
             mVendorsFragment.setArguments(getVendorsFragmentArguments());
             fm.beginTransaction()
-                    .add(R.id.fragment_vendors, mVendorsFragment, "vendors")
+                    .add(R.id.fragment_kegs, mVendorsFragment, "vendors")
                     .commit();
         }
 
         // Vendors content comes from reused activity
         mTabHost.addTab(mTabHost.newTabSpec(TAG_VENDORS)
-                .setIndicator(buildIndicator(R.string.starred_vendors))
-                .setContent(R.id.fragment_vendors));
+                .setIndicator(buildIndicator(R.string.starred_kegs))
+                .setContent(R.id.fragment_kegs));
     }
 
     private Bundle getSessionsFragmentArguments() {

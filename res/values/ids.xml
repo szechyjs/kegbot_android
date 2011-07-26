@@ -21,8 +21,8 @@
 
     <item type="id" name="fragment_drinks" />
     <item type="id" name="fragment_drink_detail" />
-    <item type="id" name="fragment_vendors" />
-    <item type="id" name="fragment_vendor_detail" />
+    <item type="id" name="fragment_kegs" />
+    <item type="id" name="fragment_keg_detail" />
 
     <item type="id" name="menu_refresh_progress" />
 

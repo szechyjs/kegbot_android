@@ -11,6 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_width="@dimen/tap_image_size"
         android:layout_height="@dimen/tap_image_size"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="@dimen/speaker_image_padding"
         android:src="@drawable/speaker_image_empty" />
         
@@ -28,7 +29,8 @@
      	android:layout_below="@id/on_tap"
         android:layout_toRightOf="@id/tap_image"
         android:layout_width="@dimen/tap_progress_width"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
+        android:text="Pints Poured"
         android:textSize="10sp" />
 
 	<ProgressBar android:id="@+id/kegProgress"
@@ -36,6 +38,7 @@
 		android:layout_toRightOf="@id/tap_image"
 		android:layout_width="@dimen/tap_progress_width"
 		android:layout_height="@dimen/tap_progress_height"
+		android:layout_marginTop="4dp"
 		style="?android:attr/progressBarStyleHorizontal" />
 		
 	<ImageView android:id="@+id/thermometer"

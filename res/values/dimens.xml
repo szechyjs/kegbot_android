@@ -31,7 +31,7 @@
     <dimen name="track_icon_width">40dp</dimen>
     <dimen name="track_icon_padding">4dp</dimen>
     <dimen name="tap_progress_width">160dp</dimen>
-   	<dimen name="tap_progress_height">12dp</dimen>
+   	<dimen name="tap_progress_height">10dp</dimen>
 
     <!-- body content -->
     <dimen name="body_padding_medium">10dp</dimen>

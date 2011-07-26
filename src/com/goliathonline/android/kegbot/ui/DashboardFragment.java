@@ -108,10 +108,18 @@ public class DashboardFragment extends Fragment {
 
         root.findViewById(R.id.home_btn_keg).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                // Launch map of conference venue
                 fireTrackerEvent("Kegs");
-                startActivity(new Intent(getActivity(),
-                        UIUtils.getMapActivityClass(getActivity())));
+                if (UIUtils.isHoneycombTablet(getActivity())) {
+                    startActivity(new Intent(getActivity(), ScheduleMultiPaneActivity.class));
+                } else {
+                	final Intent intent = new Intent(Intent.ACTION_VIEW,
+                			KegbotContract.Kegs.CONTENT_URI);
+                	intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.title_drinks));
+                	intent.putExtra(DrinksFragment.EXTRA_NEXT_TYPE,
+                			KegsFragment.NEXT_TYPE_KEGS);
+                	startActivity(intent);
+                }
+                
             }
         });
 

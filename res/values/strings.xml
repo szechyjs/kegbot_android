@@ -96,8 +96,8 @@
     <string name="search_sessions">Sessions</string>
     <string name="search_vendors">Sandbox</string>
 
-    <string name="starred_sessions">Sessions</string>
-    <string name="starred_vendors">Sandbox</string>
+    <string name="starred_drinks">Drinks</string>
+    <string name="starred_kegs">Kegs</string>
 
     <string name="search_label">Kegbot</string>
     <string name="search_hint">Session keywords</string>

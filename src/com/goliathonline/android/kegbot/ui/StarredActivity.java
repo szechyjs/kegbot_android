@@ -17,6 +17,7 @@
 package com.goliathonline.android.kegbot.ui;
 
 import com.goliathonline.android.kegbot.provider.KegbotContract.Drinks;
+import com.goliathonline.android.kegbot.provider.KegbotContract.Kegs;
 import com.goliathonline.android.kegbot.provider.ScheduleContract.Sessions;
 import com.goliathonline.android.kegbot.provider.ScheduleContract.Vendors;
 import com.goliathonline.android.kegbot.ui.phone.DrinkDetailActivity;
@@ -42,13 +43,13 @@ import android.widget.TextView;
 public class StarredActivity extends BaseMultiPaneActivity {
 
     public static final String TAG_DRINKS = "drinks";
-    public static final String TAG_VENDORS = "vendors";
+    public static final String TAG_KEGS = "kegs";
 
     private TabHost mTabHost;
     private TabWidget mTabWidget;
 
     private DrinksFragment mDrinksFragment;
-    private VendorsFragment mVendorsFragment;
+    private KegsFragment mKegsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class StarredActivity extends BaseMultiPaneActivity {
         mTabHost.setup();
 
         setupSessionsTab();
-        //setupVendorsTab();
+        setupKegsTab();
     }
 
     @Override
@@ -101,39 +102,39 @@ public class StarredActivity extends BaseMultiPaneActivity {
 
         // Sessions content comes from reused activity
         mTabHost.addTab(mTabHost.newTabSpec(TAG_DRINKS)
-                .setIndicator(buildIndicator(R.string.starred_sessions))
+                .setIndicator(buildIndicator(R.string.starred_drinks))
                 .setContent(R.id.fragment_drinks));
     }
 
     /**
      * Build and add "vendors" tab.
      */
-    private void setupVendorsTab() {
+    private void setupKegsTab() {
         // TODO: this is very inefficient and messy, clean it up
         FrameLayout fragmentContainer = new FrameLayout(this);
-        fragmentContainer.setId(R.id.fragment_vendors);
+        fragmentContainer.setId(R.id.fragment_kegs);
         fragmentContainer.setLayoutParams(
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
                         ViewGroup.LayoutParams.FILL_PARENT));
         ((ViewGroup) findViewById(android.R.id.tabcontent)).addView(fragmentContainer);
 
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Vendors.CONTENT_STARRED_URI);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, Kegs.CONTENT_STARRED_URI);
 
         final FragmentManager fm = getSupportFragmentManager();
 
-        mVendorsFragment = (VendorsFragment) fm.findFragmentByTag("vendors");
-        if (mVendorsFragment == null) {
-            mVendorsFragment = new VendorsFragment();
-            mVendorsFragment.setArguments(intentToFragmentArguments(intent));
+        mKegsFragment = (KegsFragment) fm.findFragmentByTag("kegs");
+        if (mKegsFragment == null) {
+            mKegsFragment = new KegsFragment();
+            mKegsFragment.setArguments(intentToFragmentArguments(intent));
             fm.beginTransaction()
-                    .add(R.id.fragment_vendors, mVendorsFragment, "vendors")
+                    .add(R.id.fragment_kegs, mKegsFragment, "kegs")
                     .commit();
         }
 
         // Vendors content comes from reused activity
-        mTabHost.addTab(mTabHost.newTabSpec(TAG_VENDORS)
-                .setIndicator(buildIndicator(R.string.starred_vendors))
-                .setContent(R.id.fragment_vendors));
+        mTabHost.addTab(mTabHost.newTabSpec(TAG_KEGS)
+                .setIndicator(buildIndicator(R.string.starred_kegs))
+                .setContent(R.id.fragment_kegs));
     }
 
     /**
@@ -173,8 +174,8 @@ public class StarredActivity extends BaseMultiPaneActivity {
         if (mDrinksFragment != null) {
         	mDrinksFragment.clearCheckedPosition();
         }
-        if (mVendorsFragment != null) {
-            mVendorsFragment.clearCheckedPosition();
+        if (mKegsFragment != null) {
+            mKegsFragment.clearCheckedPosition();
         }
     }
 }

@@ -176,6 +176,8 @@ public class KegbotContract {
     public static class Kegs implements KegsColumns, BaseColumns {
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_KEGS).build();
+        public static final Uri CONTENT_STARRED_URI =
+            CONTENT_URI.buildUpon().appendPath(PATH_STARRED).build();
 
         public static final String CONTENT_TYPE =
                 "vnd.android.cursor.dir/vnd.kegbot.keg";

@@ -70,12 +70,20 @@
             android:label="@string/title_schedule" />
 
         <activity
-            android:name=".ui.phone.TracksActivity"
+            android:name=".ui.phone.KegsActivity"
             android:label="@string/title_tracks">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="vnd.android.cursor.dir/vnd.kegbot.keg" />
+            </intent-filter>
+        </activity>
+        
+		<activity android:name=".ui.phone.KegDetailActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.kegbot.keg" />
             </intent-filter>
         </activity>
         
