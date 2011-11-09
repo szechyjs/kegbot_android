@@ -10,7 +10,7 @@
         android:targetSdkVersion="13" />
 
     <permission
-        android:name="com.goliathonline.android.kegbot.permission.WRITE_SCHEDULE"
+        android:name="com.goliathonline.android.kegbot.permission.WRITE_DB"
         android:protectionLevel="normal"
         android:label="@string/permission_write"
         android:description="@string/permission_write" />
@@ -164,7 +164,7 @@
         <provider
             android:name="com.goliathonline.android.kegbot.provider.KegbotProvider"
             android:authorities="com.goliathonline.android.kegbot"
-            android:writePermission="com.goliathonline.android.kegbot.permission.WRITE_SCHEDULE" />
+            android:writePermission="com.goliathonline.android.kegbot.permission.WRITE_DB" />
 
     </application>
 </manifest>
