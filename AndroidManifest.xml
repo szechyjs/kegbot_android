@@ -139,7 +139,7 @@
         </receiver>
 
         <receiver
-            android:name=".C2DMReceiver"
+            android:name=".util.C2DMReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <!-- Receive the actual message -->
             <intent-filter>
