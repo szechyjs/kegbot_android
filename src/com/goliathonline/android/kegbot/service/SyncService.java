@@ -19,6 +19,7 @@ package com.goliathonline.android.kegbot.service;
 import com.goliathonline.android.kegbot.io.LocalExecutor;
 import com.goliathonline.android.kegbot.io.RemoteExecutor;
 import com.goliathonline.android.kegbot.io.RemoteJsonHandler;
+import com.goliathonline.android.kegbot.util.PrefsHelper;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -74,13 +75,14 @@ public class SyncService extends IntentService {
 
     /** Root worksheet feed for online data source */
     // TODO: insert your sessions/speakers/vendors spreadsheet doc URL here.
-    public static final String WORKSHEETS_URL = "http://kegbot.goliathonline.com/api";
 
     private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static final String ENCODING_GZIP = "gzip";
 
     private static final int VERSION_NONE = 0;
     private static final int VERSION_CURRENT = 11;
+    
+    private static String mApiUrl;
 
     private LocalExecutor mLocalExecutor;
     private RemoteExecutor mRemoteExecutor;
@@ -98,6 +100,8 @@ public class SyncService extends IntentService {
 
         mLocalExecutor = new LocalExecutor(getResources(), resolver);
         mRemoteExecutor = new RemoteExecutor(httpClient, resolver);
+        
+        mApiUrl = PrefsHelper.getAPIUrl(getBaseContext());
     }
 
     @Override
@@ -136,7 +140,7 @@ public class SyncService extends IntentService {
             // Always hit remote spreadsheet for any updates
             final long startRemote = System.currentTimeMillis();
             mRemoteExecutor
-                    .executeGet(WORKSHEETS_URL + "/events", new RemoteJsonHandler(mRemoteExecutor));
+                    .executeGet(PrefsHelper.getAPIUrl(getBaseContext()) + "/events", new RemoteJsonHandler(mRemoteExecutor));
             Log.d(TAG, "remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
 
         } catch (Exception e) {
@@ -153,6 +157,11 @@ public class SyncService extends IntentService {
         // Announce success to any surface listener
         Log.d(TAG, "sync finished");
         if (receiver != null) receiver.send(STATUS_FINISHED, Bundle.EMPTY);
+    }
+    
+    public static String getApiUrl()
+    {
+    	return mApiUrl;
     }
 
     /**

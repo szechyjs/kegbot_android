@@ -20,9 +20,12 @@ import com.goliathonline.android.kegbot.service.SyncService;
 import com.goliathonline.android.kegbot.util.AnalyticsUtils;
 import com.goliathonline.android.kegbot.util.DetachableResultReceiver;
 import com.goliathonline.android.kegbot.util.EulaHelper;
+import com.goliathonline.android.kegbot.util.PrefsHelper;
 import com.goliathonline.android.kegbot.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +44,7 @@ import android.widget.Toast;
  */
 public class HomeActivity extends BaseActivity {
     private static final String TAG = "HomeActivity";
+    private static final int REQUEST_CODE_PREFERENCES = 1;
 
     private TagStreamFragment mTagStreamFragment;
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
@@ -52,6 +56,29 @@ public class HomeActivity extends BaseActivity {
         if (!EulaHelper.hasAcceptedEula(this)) {
             EulaHelper.showEula(false, this);
         }
+        
+        if (!PrefsHelper.hasAPIUrl(this))
+        {
+        	final Intent launchPreferencesIntent = new Intent().setClass(this, PreferencesActivity.class);
+        	
+        	AlertDialog.Builder eula = new AlertDialog.Builder(this)
+            .setTitle("Setup API URL")
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setMessage("The kegbot api url needs to be entered to continue.")
+            .setCancelable(false)
+            .setPositiveButton(android.R.string.ok,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            
+                            // Make it a subactivity so we know when it returns
+                            startActivityForResult(launchPreferencesIntent, REQUEST_CODE_PREFERENCES);
+                        }
+                    });
+            eula.show();
+   
+        	
+        }
 
         AnalyticsUtils.getInstance(this).trackPageView("/Home");
 
@@ -60,7 +87,7 @@ public class HomeActivity extends BaseActivity {
 
         FragmentManager fm = getSupportFragmentManager();
 
-        mTagStreamFragment = (TagStreamFragment) fm.findFragmentById(R.id.fragment_tag_stream);
+        mTagStreamFragment = (TagStreamFragment) fm.findFragmentById(R.id.fragment_tag_stream);     
 
         mSyncStatusUpdaterFragment = (SyncStatusUpdaterFragment) fm
                 .findFragmentByTag(SyncStatusUpdaterFragment.TAG);
@@ -99,7 +126,8 @@ public class HomeActivity extends BaseActivity {
     private void triggerRefresh() {
         final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, SyncService.class);
         intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mSyncStatusUpdaterFragment.mReceiver);
-        startService(intent);
+        if (PrefsHelper.hasAPIUrl(this))
+        	startService(intent);
 
         if (mTagStreamFragment != null) {
             mTagStreamFragment.refresh();
@@ -162,6 +190,18 @@ public class HomeActivity extends BaseActivity {
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             ((HomeActivity) getActivity()).updateRefreshStatus(mSyncing);
+        }
+        
+        @Override
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            // The preferences returned if the request code is what we had given
+            // earlier in startSubActivity
+            if (requestCode == REQUEST_CODE_PREFERENCES) {
+                // Read a sample value they have set
+            	//triggerRefresh();
+            }
         }
     }
 }

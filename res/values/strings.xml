@@ -26,6 +26,7 @@
     <string name="description_export">Export</string>
     <string name="description_star">Star</string>
     <string name="description_now">Go to Now</string>
+    <string name="description_prefs">Preferences</string>
 
     <string name="title_now_playing">Now Playing</string>
     <string name="title_schedule">Schedule</string>

@@ -56,7 +56,7 @@ public class RemoteUsersHandler {
     {
     	for (String user : mUsers)
     	{
-    		final String url = SyncService.WORKSHEETS_URL + "/users/" + user;
+    		final String url = SyncService.getApiUrl() + "/users/" + user;
     		final HttpGet request = new HttpGet(url);
             final JsonHandler handler = new RemoteUserHandler();
             executor.execute(request, handler);

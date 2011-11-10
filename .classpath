@@ -3,7 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="C:/dev/android-sdk-windows/extras/android/compatibility/v4/android-support-v4.jar"/>
 	<classpathentry kind="lib" path="C:/dev/GoogleAnalyticsAndroid_1.2/libGoogleAnalytics.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="C:/dev/android-sdk-windows/extras/android/support/v4/android-support-v4.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

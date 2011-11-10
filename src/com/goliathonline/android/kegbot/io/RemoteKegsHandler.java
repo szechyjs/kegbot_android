@@ -61,11 +61,13 @@ public class RemoteKegsHandler extends JsonHandler {
         	int numKegs = resultArray.length();
         	List<String> kegIDs = new ArrayList<String>();
         	
-        	JSONObject keg;
+        	JSONObject keg, kegInfo;
         	for (int i = 0; i < numKegs; i++)
         	{
         		keg = resultArray.getJSONObject(i);
-        		kegIDs.add(keg.getString("id"));
+        		kegInfo = keg.getJSONObject("keg");
+        		kegIDs.add(kegInfo.getString("id"));
+        		///TODO: new api allows all infromation to be parsed here, and not in a seperate call.
         	}
         	considerUpdate(kegIDs, Kegs.CONTENT_URI, resolver);
     	}
@@ -76,7 +78,7 @@ public class RemoteKegsHandler extends JsonHandler {
     private void considerUpdate(List<String> kegIDs, Uri targetDir,
     		ContentResolver resolver) throws HandlerException {
     	
-    	String url = SyncService.WORKSHEETS_URL + "/kegs/";
+    	String url = SyncService.getApiUrl() + "/kegs/";
     	
     	for (int i = 0; i < kegIDs.size(); i++)
     	{
